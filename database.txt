@@ -1,0 +1,32 @@
+Thông tin eFMS Production nhe team
+- Web: https://efms.itlvn.com
+- API: https://api-efms.itlvn.com
+- Redis của EFMS : IP : 10.17.28.41, port 6382, password eFMS@dm1n
+- MongoDB của eFMS : db name : efms , user : efms , pass : efmsP@ssw0rd , IP 10.17.28.41, port 27017
+- Database:
++ IP DB server : 10.17.28.48
++ DB name: eFMS
++ UserID: eFMS-Admin
++ Password: eFMS@dm!n20
+
+
+
+
+
+"Server=192.168.7.31; Database=eFMSTest; User ID=sa; Password=P@ssw0rd",
+
++ IP DB server : 10.17.28.48
++ DB name: eFMS
++ UserID: eFMS-Admin
++ Password: eFMS@dm!n20
+
+
+Nhánh: uat/21-10-2020-sprint20
+feature/huy
+  feature/sprint21-23-10-2020
+  feature/uat/21-10-2020-sprint20
+
+
+
+
+

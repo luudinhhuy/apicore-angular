@@ -1,0 +1,106 @@
+<div class="form-update-advpayment">
+    <form [formGroup]="formCreate">
+        <div class="row">
+            <div class="col-4">
+                <div class="form-group">
+                    <label class="form-control-label">
+                        Advance No:
+                    </label>
+                    <input type="text" class="form-control m-input m-input--square" placeholder="Advance no"
+                        formControlName="advanceNo">
+                </div>
+            </div>
+            <div class="col-4">
+                <div class="form-group">
+                    <label class="form-control-label">
+                        Requester:
+                    </label>
+                    <select class="form-control" formControlName="requester">
+                        <option *ngFor="let user of (users | async)" [ngValue]="user.id">{{user.username}}</option>
+                    </select>
+                </div>
+            </div>
+            <div class="col-4">
+                <div class="form-group">
+                    <label class="form-control-label">
+                        Request Date:
+                    </label>
+                    <div class="m-input-icon m-input-icon--right down daterange-rtl">
+                        <input type="text" class="form-control m-input m-input--square" ngxDaterangepickerMd
+                            [locale]="{applyLabel: 'apply', format: 'DD/MM/YYYY'}" [singleDatePicker]="true"
+                            name="daterange" placeholder="Select request date" [autoApply]="true"
+                            formControlName="requestDate" [attr.disabled]="isDisabled" [maxDate]="maxDate" />
+                        <span class="m-input-icon__icon m-input-icon__icon--right">
+                            <span>
+                                <i class="la la-calendar"></i>
+                            </span>
+                        </span>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-4">
+                <div class="form-group">
+                    <label class="form-control-label">
+                        Payment Method:
+                    </label>
+                    <select class="form-control" formControlName="paymentMethod" name="method">
+                        <option *ngFor="let method of methods; let i = index" [ngValue]="method">{{method.title}}
+                        </option>
+                    </select>
+                </div>
+            </div>
+            <div class="col-4">
+                <div class="form-group">
+                    <label class="form-control-label">
+                        Department:
+                    </label>
+                    <input type="text" class="form-control m-input m-input--square" placeholder="Department"
+                        formControlName="department">
+                </div>
+            </div>
+            <div class="col-4">
+                <div class="form-group">
+                    <label class="form-control-label">
+                        Deadline Payment:
+                    </label>
+                    <div class="m-input-icon m-input-icon--right down daterange-rtl">
+                        <input type="text" class="form-control m-input m-input--square" ngxDaterangepickerMd
+                            [locale]="{applyLabel: 'apply', format: 'DD/MM/YYYY'}" [singleDatePicker]="true"
+                            name="daterange" [minDate]="minDate" placeholder="Select Deadline Date" [autoApply]="true"
+                            formControlName="deadLine" [attr.disabled]="isDisabled" />
+                        <span class="m-input-icon__icon m-input-icon__icon--right">
+                            <span>
+                                <i class="la la-calendar"></i>
+                            </span>
+                        </span>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-8">
+                <div class="form-group">
+                    <label class="form-control-label" for="">
+                        Note:
+                    </label>
+                    <textarea class="form-control m-input m-input--square" name="note" rows="2"
+                        formControlName="note"></textarea>
+                </div>
+            </div>
+            <div class="col-4">
+                <div class="form-group">
+                    <label class="form-control-label" for="">
+                        Currency:
+                    </label>
+                    <select class="form-control" formControlName="currency" name="currency"
+                        (ngModelChange)="changeCurrency($event)">
+                        <option *ngFor="let currency of currencyList" [ngValue]="currency.id">{{currency.id}}</option>
+                    </select>
+                </div>
+            </div>
+        </div>
+    </form>
+
+</div>

@@ -1,0 +1,44 @@
+<div class="m-portlet">
+    <div class="m-form">
+        <div class="m-portlet__body">
+            <div class="row">
+                <div class="col">
+                    <div class="input-group m-input-group m-input-group--square" [formGroup]="formSearch">
+                        <div class="input-group-prepend">
+                            <button type="button" class="btn btn-secondary dropdown-toggle" data-toggle="dropdown"
+                                aria-haspopup="true" aria-expanded="false">
+                                {{selectedTitleFilter}}
+                            </button>
+                            <div class="dropdown-menu">
+                                <a *ngFor="let filter of fieldSearchs;let index=index;"
+                                    [ngClass]="{ 'active': filter.value == selectedValueFilter}" class="dropdown-item"
+                                    href="javascript:void(0)"
+                                    (click)="selectedValueFilter=filter.value;selectedTitleFilter=filter.title">
+                                    {{filter.title}}
+                                </a>
+                            </div>
+                        </div>
+                        <input type="text" class="form-control" formControlName="searchKey"
+                            aria-label="Text input with dropdown button">
+                        <div class="input-group-append">
+                            <button class="btn btn-primary" type="button" title="Search" (click)="onSearchRequest()">
+                                <i class="la la-search"></i>
+                            </button>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-auto">
+                    <button type="reset" class="btn btn-block btn-default m-btn--square m-btn--icon m-btn--uppercase"
+                        (click)="reset()">
+                        <span>
+                            <i class="la la-refresh"></i>
+                            <span>
+                                Reset
+                            </span>
+                        </span>
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

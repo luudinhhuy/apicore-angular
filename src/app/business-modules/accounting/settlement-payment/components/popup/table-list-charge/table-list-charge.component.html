@@ -1,0 +1,263 @@
+<div class="modal list-charge-popup m-animate-fade-in" role="dialog" bsModal #popup="bs-modal" aria-hidden="true">
+    <div class="modal-dialog c-modal-fullscreen" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">Add New Charge</h5>
+                <button type="button" (click)="hide()" class="close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <form class="form" class="m-form--state m-form" [formGroup]="formGroup">
+                    <div class="row">
+                        <div class="col-md-4">
+                            <div class="form-group">
+                                <label required> Shipment </label>
+                                <app-combo-grid-virtual-scroll
+                                    [currentActiveItemId]="{field:'hblid', value:shipment.value}"
+                                    (itemSelected)="onSelectDataFormInfo($event, 'shipment')"
+                                    [selectedDisplayFields]="['jobId','mbl','hbl']" [dataSources]="shipments"
+                                    [displayFields]="configShipmentDisplayFields"
+                                    [placeholder]="'Please Select Shipment'"
+                                    (remove)="resetFormControl(shipment); charges = []">
+                                </app-combo-grid-virtual-scroll>
+                            </div>
+                        </div>
+                        <div class="col-md-4">
+                            <div class="form-group">
+                                <label> Custom No </label>
+                                <app-combo-grid-virtual-scroll
+                                    [currentActiveItemId]="{field:'clearanceNo', value:customNo.value}"
+                                    (itemSelected)="onSelectDataFormInfo($event, 'cd')"
+                                    [selectedDisplayFields]="['clearanceNo']" [dataSources]="cds | async"
+                                    [displayFields]="configCustomDisplayFields" (remove)="resetFormControl(customNo)">
+                                </app-combo-grid-virtual-scroll>
+                            </div>
+                        </div>
+                        <div class="col-md-4">
+                            <div class="form-group">
+                                <label> Advance No </label>
+                                <app-combo-grid-virtual-scroll
+                                    [currentActiveItemId]="{field:'advanceNo', value:advanceNo.value}"
+                                    (itemSelected)="onSelectDataFormInfo($event, 'advanceNo')"
+                                    [selectedDisplayFields]="['advanceNo','amount','requestCurrency']"
+                                    [dataSources]="advs" [displayFields]="configAdvanceDisplayFields"
+                                    (remove)="resetFormControl(advanceNo)">
+                                </app-combo-grid-virtual-scroll>
+                            </div>
+                        </div>
+                    </div>
+                </form>
+                <ng-container *ngIf="!!shipment.value">
+                    <div class="table-wrapper table-editable m--margin-top-20 m-animate-fade-in">
+                        <table class="table table-bordered dataTable-edit">
+                            <thead app-table-header [headers]="headers"
+                                (onClick)="sortBy($event.sortField ? $event.sortField : '')">
+                                <th class="m--w-50 first table-actions-col">
+                                </th>
+                            </thead>
+                            <tbody class="tbody-group">
+                                <ng-container *ngIf="!!charges.length">
+                                    <tr *ngFor="let charge of charges; let i = index; trackBy: trackByFn">
+                                        <td class="table-actions-col fixed-side">
+                                            <div class="table-actions">
+                                                <button
+                                                    class="btn btn-success btn-sm m-btn--square m-btn--icon m-btn--icon-only text-white"
+                                                    title="Duplicate" (click)="duplicateCharge(i)"><i
+                                                        class="la la-copy"></i>
+                                                </button>
+                                                <button type="button" (click)="deleteCharge(i)" *ngIf="!isUpdate"
+                                                    class="btn btn-danger btn-sm m-btn--square m-btn--icon m-btn--icon-only"
+                                                    title="Remove">
+                                                    <i class="la la-trash"></i>
+                                                </button>
+                                            </div>
+                                        <td>
+                                            <div class="form-group"
+                                                [ngClass]="{'m-form__group has-danger': isSubmitted && (!charge.chargeId || isDuplicateChargeCode) }">
+                                                <app-combo-grid-virtual-scroll
+                                                    [currentActiveItemId]="{field:'id', value:charge.chargeId}"
+                                                    (itemSelected)="onSelectDataTableInfo($event, charge, 'charge')"
+                                                    [selectedDisplayFields]="['chargeNameEn']"
+                                                    [dataSources]="listCharges"
+                                                    [displayFields]="configChargeDisplayFields" [height]="150"
+                                                    placeholder="Please Select" (remove)="charge.chargeId = null">
+                                                </app-combo-grid-virtual-scroll>
+                                            </div>
+                                        </td>
+                                        <td>
+                                            <div class="form-group col-md-12 dropdown-partner e--combogrid " dropdown
+                                                [ngClass]="{'m-form__group has-danger': isSubmitted && !charge.paymentObjectId}">
+                                                <input type="text" class="dropdown-toggle form-control" dropdownToggle
+                                                    readonly placeholder="Please Select" [(ngModel)]="charge.payer">
+                                                <ng-container>
+                                                    <div class="e--combogrid_icon">
+                                                        <span class="e--combogrid_icon__dropdown">
+                                                            <i class="fa fa-angle-down" aria-hidden="true"></i>
+                                                        </span>
+                                                        <span class="e--combogrid_icon__clear"
+                                                            (click)="charge.paymentObjectId = null; charge.payer = null">
+                                                            <i class="la la-times" aria-hidden="true"></i>
+                                                        </span>
+                                                    </div>
+                                                </ng-container>
+                                                <div *dropdownMenu class="dropdown-menu dropdown-partner__content">
+                                                    <div class="d-flex justify-content-end dropdown-partner__header">
+                                                        <a class="text-primary text-underline m--margin-right-20 pointer"
+                                                            *ngFor="let type of partnerType; trackBy: trackByFn"
+                                                            [title]="type.displayName"
+                                                            (click)="onSelectPartnerType(type, charge, 'partner-type')">{{type.displayName}}</a>
+                                                    </div>
+                                                    <app-combo-grid [headers]="headerPartner" [data]="listPartner"
+                                                        [fields]="['taxCode','partnerNameEn']"
+                                                        [active]="charge.paymentObjectId"
+                                                        (onClick)="onSelectDataTableInfo($event, charge ,'payer')">
+                                                    </app-combo-grid>
+                                                </div>
+                                            </div>
+                                        </td>
+                                        <td>
+                                            <div class="form-group "
+                                                [ngClass]="{'m-form__group has-danger': isSubmitted && (charge.quantity < 0 || charge.quantity === null)}">
+                                                <input type="number" class="form-control" [(ngModel)]="charge.quantity"
+                                                    (ngModelChange)="calculateTotal(charge.vatrate,$event,charge.unitPrice, charge)"
+                                                    placeholder="Quantity" min="0" numeric [decimals]="digitDecimal">
+                                            </div>
+                                        </td>
+                                        <td>
+                                            <div class="form-group"
+                                                [ngClass]="{'m-form__group has-danger': isSubmitted  && !charge.unitId}">
+                                                <select class="form-control" [(ngModel)]="charge.unitId">
+                                                    <option value="null" disabled>Please select</option>
+                                                    <option *ngFor="let unit of (listUnits | async)" [value]="unit.id">
+                                                        {{unit.code}}
+                                                    </option>
+                                                </select>
+                                            </div>
+                                        </td>
+                                        <td>
+                                            <div class="form-group "
+                                                [ngClass]="{'m-form__group has-danger': isSubmitted && charge.unitPrice === null || (!!charge.unitPrice && charge.unitPrice < 0)}">
+                                                <input type="number" class="form-control" [(ngModel)]="charge.unitPrice"
+                                                    (ngModelChange)="calculateTotal(charge.vatrate,charge.quantity,$event, charge)"
+                                                    placeholder="Unit Price" min="0" numeric [decimals]="digitDecimal"
+                                                    autoFormatCurrency>
+                                            </div>
+                                        </td>
+                                        <td class="disabled">
+                                            <div class="form-group ">
+                                                <input type="text" class="form-control" [(ngModel)]="charge.currencyId"
+                                                    placeholder="Unit Price" disabled>
+                                            </div>
+                                        </td>
+                                        <td>
+                                            <div class="form-group "
+                                                [ngClass]="{'m-form__group has-danger': isSubmitted  && (charge.vatrate > 100) }">
+                                                <input type="number" class="form-control" [(ngModel)]="charge.vatrate"
+                                                    (ngModelChange)="calculateTotal($event,charge.quantity,charge.unitPrice, charge)"
+                                                    placeholder="%" max="100" numeric [decimals]="digitDecimal">
+                                            </div>
+                                        </td>
+                                        <td class="disabled">
+                                            <div class="form-group ">
+                                                <input type="text" class="form-control" [(ngModel)]="charge.total"
+                                                    readonly disabled currencyMask placeholder="Total" min="0">
+                                            </div>
+                                        </td>
+                                        <td>
+                                            <div class="form-group col-md-12 dropdown-partner e--combogrid" dropdown
+                                                [ngClass]="{'m-form__group has-danger': isSubmitted  && (charge.type === 'OBH' && !charge.obhId) }">
+                                                <input type="text" class="dropdown-toggle form-control" dropdownToggle
+                                                    readonly placeholder="Please Select"
+                                                    [(ngModel)]="charge.obhPartnerName"
+                                                    [disabled]="!charge.chargeId || charge.type !== 'OBH' ? 'disabled': null"
+                                                    #c>
+                                                <ng-container *ngIf="!c.disabled">
+                                                    <div class="e--combogrid_icon">
+                                                        <span class="e--combogrid_icon__dropdown">
+                                                            <i class="fa fa-angle-down" aria-hidden="true"></i>
+                                                        </span>
+                                                        <span class="e--combogrid_icon__clear"
+                                                            (click)="charge.obhId = null; charge.obhPartnerName = null">
+                                                            <i class="la la-times" aria-hidden="true"></i>
+                                                        </span>
+                                                    </div>
+                                                </ng-container>
+                                                <div *dropdownMenu class="dropdown-menu dropdown-partner__content">
+                                                    <div class="d-flex justify-content-end dropdown-partner__header">
+                                                        <a class="text-primary text-underline m--margin-right-20 pointer"
+                                                            *ngFor="let type of partnerType; trackBy: trackByFn"
+                                                            [title]="type.displayName"
+                                                            (click)="onSelectPartnerType(type, charge, 'obh-type')">{{type.displayName}}</a>
+                                                    </div>
+                                                    <app-combo-grid [headers]="headerPartner" [data]="listPartner"
+                                                        [fields]="['taxCode','partnerNameEn']" [active]="charge.obhId"
+                                                        (onClick)="onSelectDataTableInfo($event, charge ,'obh')">
+                                                    </app-combo-grid>
+                                                </div>
+                                            </div>
+                                        </td>
+                                        <td>
+                                            <div class="form-group "
+                                                [ngClass]="{'m-form__group has-danger': isSubmitted && isDuplicateInvoice}">
+                                                <input type="text" class="form-control" [(ngModel)]="charge.invoiceNo"
+                                                    (ngModelChange)="isDuplicateInvoice = false">
+                                            </div>
+                                        </td>
+                                        <td>
+                                            <div class="form-group ">
+                                                <input type="text" class="form-control" [(ngModel)]="charge.seriesNo">
+                                            </div>
+                                        </td>
+                                        <td>
+                                            <div class="form-group table-date">
+                                                <div class="m-input-icon m-input-icon--right down daterange-rtl">
+                                                    <input type="text" class="form-control m-input m-input--square"
+                                                        ngxDaterangepickerMd
+                                                        [locale]="{applyLabel: 'apply', format: 'DD/MM/YYYY'}" readonly
+                                                        [autoApply]="true" [singleDatePicker]="true"
+                                                        [alwaysShowCalendars]="true" [(ngModel)]="charge.invoiceDate" />
+                                                    <span class="m-input-icon__icon m-input-icon__icon--right">
+                                                        <span>
+                                                            <i class="la la-calendar"></i>
+                                                        </span>
+                                                    </span>
+                                                </div>
+                                            </div>
+                                        </td>
+                                        <td>
+                                            <div class="form-group ">
+                                                <input type="text" class="form-control" [(ngModel)]="charge.notes">
+                                            </div>
+                                        </td>
+                                    </tr>
+                                </ng-container>
+                                <tr app-table-none-record *ngIf="!charges.length">
+                                </tr>
+                                <tr *ngIf="!isUpdate">
+                                    <td colspan=1 class="fixed-side">
+                                        <a class="btn m-btn--icon m-btn--icon-only m--font-primary" title="Add"
+                                            (click)="addCharge()">
+                                            <i class="fa fa-plus-circle fa-2x"></i>
+                                        </a>
+                                    </td>
+                            </tbody>
+                        </table>
+                    </div>
+                </ng-container>
+            </div>
+            <div class="modal-footer m--align-center">
+                <div class="row">
+                    <div class="col-12">
+                        <div class="m--align-center m--margin-top-20">
+                            <app-default-button [buttonSetting]="saveButtonSetting" (onClick)="saveChargeList()">
+                            </app-default-button>
+                            <app-default-button [buttonSetting]="cancelButtonSetting" (onClick)="hide()">
+                            </app-default-button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

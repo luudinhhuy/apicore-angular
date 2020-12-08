@@ -1,0 +1,181 @@
+<div class="form-custom-clearance">
+    <form action="" [formGroup]="formGroup">
+        <div class="row">
+            <div class="col-md-4">
+                <div class="form-group" [ngClass]="{'m-form__group has-danger': isSubmitted && !clearanceNo.value}">
+                    <label required>Clearance No</label>
+                    <input type="text" class="form-control" formControlName="clearanceNo">
+                </div>
+            </div>
+            <div class="col-md-4">
+                <div class="form-group" [ngClass]="{'m-form__group has-danger': isSubmitted && !partnerTaxCode.value}">
+                    <label required>Customer</label>
+                    <app-combo-grid-virtual-scroll [selectedDisplayFields]="['partnerNameEn']"
+                        [dataSources]="listCustomer | async" [displayFields]="displayFieldCustomer"
+                        (itemSelected)="onSelectDataFormInfo($event, 'customer')"
+                        [currentActiveItemId]="{ field: 'taxCode', value: partnerTaxCode.value,hardValue:''}"
+                        placeholder="Please customer" (remove)="resetFormControl(partnerTaxCode)">
+                    </app-combo-grid-virtual-scroll>
+                </div>
+            </div>
+            <div class="col-md-4">
+                <div class="form-group"
+                    [ngClass]="{'m-form__group has-danger': (clearanceDate.dirty && !clearanceDate.value) || (isSubmitted  && !clearanceDate.value) || (isSubmitted && !!clearanceDate.value && !clearanceDate.value.startDate )}">
+                    <label required>Clearance Date</label>
+                    <div class="m-input-icon m-input-icon--right down daterange-rtl">
+                        <input type="text" class="form-control m-input m-input--square" ngxDaterangepickerMd
+                            [locale]="{format: 'DD/MM/YYYY'}" [autoApply]="true" [singleDatePicker]="true"
+                            [alwaysShowCalendars]="true" name="daterange" placeholder="Select clearance date" readonly
+                            formControlName="clearanceDate" />
+                        <span class="m-input-icon_clear" (click)="resetFormControl(clearanceDate)"
+                            *ngIf="!!clearanceDate.value && !!clearanceDate.value.startDate">
+                            <i class="la la-times"></i>
+                        </span>
+                        <span class="m-input-icon__icon m-input-icon__icon--right">
+                            <span>
+                                <i class="la la-calendar"></i>
+                            </span>
+                        </span>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-4">
+                <div class="form-group">
+                    <label>HBL/HAWB</label>
+                    <input type="text" class="form-control" formControlName="hblid">
+                </div>
+            </div>
+            <div class="col-md-4">
+                <div class="form-group">
+                    <label>MBL/MAWB</label>
+                    <input type="text" class="form-control" formControlName="mblid">
+                </div>
+            </div>
+            <div class="col-md-4">
+                <div class="form-group">
+                    <label>Service Type</label>
+                    <ng-select #st [allowClear]="true" [items]="serviceTypes" placeholder="Select service type"
+                        formControlName="serviceType" (opened)="closeOtherSelects(st)">
+                    </ng-select>
+                </div>
+            </div>
+            <div class="col-md-4">
+                <div class="form-group"
+                    [ngClass]="{'m-form__group has-danger': (gateway.dirty && !gateway.valid) || (isSubmitted && !gateway.value)}">
+                    <label required>Clearance Location</label>
+                    <app-combo-grid-virtual-scroll [selectedDisplayFields]="['nameEn']" [dataSources]="listPort | async"
+                        [displayFields]="displayFieldPort" (itemSelected)="onSelectDataFormInfo($event, 'port')"
+                        [currentActiveItemId]="{ field: 'taxCode', value: gateway.value,hardValue:''}"
+                        placeholder="Please clearance location" (remove)="resetFormControl(gateway)">
+                    </app-combo-grid-virtual-scroll>
+                </div>
+            </div>
+            <div class="col-md-4">
+                <div class="form-group">
+                    <label>Type</label>
+                    <ng-select #type [allowClear]="true" [items]="typeClearance" placeholder="Select type"
+                        formControlName="type" (opened)="closeOtherSelects(type)">
+                    </ng-select>
+                </div>
+            </div>
+            <div class="col-md-4">
+                <div class="form-group">
+                    <label>Route</label>
+                    <ng-select #route [allowClear]="true" [items]="routeClearance" placeholder="Select route"
+                        formControlName="route" (opened)="closeOtherSelects(route)">
+                    </ng-select>
+                </div>
+            </div>
+            <div class="col-md-4">
+                <div class="form-group"
+                    [ngClass]="{'m-form__group has-danger': (cargoType.dirty && !cargoType.valid) || (isSubmitted && !cargoType.valid)}">
+                    <label required>Cargo Type</label>
+                    <ng-select #cargo [allowClear]="true" [items]="cargoTypes" placeholder="Select cargo type"
+                        formControlName="cargoType" (opened)="closeOtherSelects(cargo)">
+                    </ng-select>
+                </div>
+            </div>
+            <div class="col-md-4">
+                <div class="form-group">
+                    <label>Export Country</label>
+                    <app-combo-grid-virtual-scroll
+                        [currentActiveItemId]="{field:'code',value:exportCountryCode.value,hardValue:''}"
+                        [selectedDisplayFields]="['nameEn']" [dataSources]="listCountry | async"
+                        (itemSelected)="onSelectDataFormInfo($event, 'country-export')"
+                        [displayFields]="[{'field':'code','label':'Country Code'},{'field':'nameEn','label':'Country Name (EN)'}]">
+                    </app-combo-grid-virtual-scroll>
+                </div>
+            </div>
+            <div class="col-md-4">
+                <div class="form-group">
+                    <label>Import Country</label>
+                    <app-combo-grid-virtual-scroll
+                        [currentActiveItemId]="{field:'code',value:importCountryCode.value,hardValue:''}"
+                        [selectedDisplayFields]="['nameEn']" [dataSources]="listCountry | async"
+                        (itemSelected)="onSelectDataFormInfo($event, 'country-import')"
+                        [displayFields]="[{'field':'code','label':'Country Code'},{'field':'nameEn','label':'Country Name (EN)'}]">
+                    </app-combo-grid-virtual-scroll>
+                </div>
+            </div>
+            <div class="col-md-4">
+                <div class="form-group">
+                    <label>Commodity</label>
+                    <app-combo-grid-virtual-scroll
+                        [currentActiveItemId]="{field:'code',value:commodityCode.value,hardValue:''}"
+                        [selectedDisplayFields]="['commodityNameEn']" [dataSources]="listCommodity | async"
+                        (itemSelected)="onSelectDataFormInfo($event,'commodity')"
+                        [displayFields]="[{'field':'code','label':'Commodity Code'},{'field':'commodityNameEn','label':'Commodity Name (EN)'}]">
+                    </app-combo-grid-virtual-scroll>
+                </div>
+            </div>
+            <div class="col-md-4">
+                <div class="form-group">
+                    <label>Gross Weight</label>
+                    <input type="text" class="form-control" formControlName="grossWeight" numeric
+                        [decimals]="digitDecimal" autoFormatCurrency>
+                </div>
+            </div>
+            <div class="col-md-4">
+                <div class="form-group">
+                    <label>Net Weight</label>
+                    <input type="text" class="form-control" formControlName="netWeight" numeric
+                        [decimals]="digitDecimal" autoFormatCurrency>
+                </div>
+            </div>
+            <div class="col-md-4">
+                <div class="form-group">
+                    <label>CBM</label>
+                    <input type="text" class="form-control" formControlName="cbm" numeric [decimals]="digitDecimal"
+                        autoFormatCurrency>
+                </div>
+            </div>
+            <div class="col-md-4">
+                <div class="form-group">
+                    <label>Qty Cont</label>
+                    <input type="text" class="form-control" formControlName="qtyCont" integer autoFormatCurrency>
+                </div>
+            </div>
+            <div class="col-md-4">
+                <div class="row">
+                    <div class="col-md-4">
+                        <div class="form-group">
+                            <label>PCS</label>
+                            <input type="text" class="form-control" formControlName="pcs" integer autoFormatCurrency>
+                        </div>
+                    </div>
+                    <div class="col-md-8">
+                        <div class="form-group">
+                            <label>Unit</label>
+                            <app-combo-grid-virtual-scroll
+                                [currentActiveItemId]="{field:'code',value:unitCode.value,hardValue:''}"
+                                [selectedDisplayFields]="['unitNameEn']" [dataSources]="listUnit | async"
+                                (itemSelected)="onSelectDataFormInfo($event,'unit')"
+                                [displayFields]="[{'field':'code','label':'Unit Code'},{'field':'unitNameEn','label':'Unit Name (EN)'}]">
+                            </app-combo-grid-virtual-scroll>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </form>
+</div>

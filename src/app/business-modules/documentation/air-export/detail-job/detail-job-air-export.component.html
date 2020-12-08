@@ -1,0 +1,145 @@
+<div class="sea-fcl-export-detail-job-page">
+    <app-sub-header>
+        <div class="c-button-actions">
+            <ng-container *ngIf="!!shipmentDetail && !shipmentDetail.isLocked">
+                <app-default-button [buttonSetting]="lockButtonSetting" (onClick)="lockShipment()"
+                    *ngIf="!!shipmentDetail && shipmentDetail.permission.allowLock">
+                </app-default-button>
+            </ng-container>
+            <span *ngIf="!!shipmentDetail && !!shipmentDetail.isLocked" class="m--margin-right-10 align-middle">
+                <i class="fa fa-lock text-danger fa-3x"></i>
+            </span>
+            <div class="dropdown m-dropdown m-dropdown--inline">
+                <button class="btn btn-default dropdown-toggle" type="button" data-toggle="dropdown"
+                    [disabled]="ACTION === 'COPY'">
+                    <i class="la la-print"></i>P/L Sheet<span class="caret"></span>
+                </button>
+                <div class="dropdown-menu">
+                    <a class="dropdown-item pointer" (click)="previewPLsheet('USD')">Preview with USD</a>
+                    <a class="dropdown-item pointer" (click)="previewPLsheet('VND')">Preview with VND</a>
+                </div>
+            </div>
+
+            <ng-container *ngIf="!!shipmentDetail && !shipmentDetail.isLocked">
+                <button type="button" class="btn btn-success m-btn--square m-btn--icon m-btn--uppercase"
+                    (click)="showDuplicateConfirm()" [disabled]="ACTION === 'COPY'"
+                    *ngIf="!!shipmentDetail && shipmentDetail.permission.allowUpdate">
+                    <span>
+                        <i class="la la-search-plus"></i>
+                        <span>
+                            Duplicate
+                        </span>
+                    </span>
+                </button>
+                <button type="button" class="btn btn-danger m-btn--square m-btn--icon m-btn--uppercase"
+                    (click)="prepareDeleteJob()" [disabled]="ACTION === 'COPY'"
+                    *ngIf="!!shipmentDetail && shipmentDetail.permission.allowDelete">
+                    <span>
+                        <i class="la la-trash"></i>
+                        <span>
+                            Delete
+                        </span>
+                    </span>
+                </button>
+
+                <app-default-button [buttonSetting]="saveButtonSetting" (onClick)="onSaveJob()"
+                    [disabled]="selectedTab !== 'SHIPMENT'"
+                    *ngIf="!!shipmentDetail && shipmentDetail.permission.allowUpdate">
+                </app-default-button>
+
+            </ng-container>
+
+            <app-default-button [buttonSetting]="cancelButtonSetting" (onClick)="confirmCancelPopup.show()">
+            </app-default-button>
+
+        </div>
+    </app-sub-header>
+</div>
+
+<div class="m-content">
+    <div class="m-portlet__body">
+        <tabset class="custom-class-tab">
+            <tab heading="Shipment Detail" (selectTab)="onSelectTab('shipment')">
+                <form-create-air type="export">
+                    <div class="row m--margin-top-20" *ngIf="!!shipmentDetail">
+                        <div class="col-md-4">
+                            <span>Created: {{shipmentDetail.datetimeCreated | date: 'dd/MM/yyyy HH:mm'}} by </span>
+                            <span class="text-success">{{shipmentDetail.userNameCreated}}</span>
+                        </div>
+                        <div class="col-md-4">
+                            <span>Modified: {{shipmentDetail.datetimeModified | date: 'dd/MM/yyyy HH:mm'}} by
+                            </span> <span class="text-success">{{shipmentDetail.userNameModified}}</span>
+                        </div>
+                        <ng-container *ngIf="!shipmentDetail.isLocked">
+                            <div class="col-md-4 text-right" *ngIf="shipmentDetail.permission.allowUpdate">
+                                <button class="btn btn-info m-btn--square m-btn--icon m-btn--uppercase" type="button"
+                                    (click)="confirmSyncHBL.show()">
+                                    <span><i class="la la-refresh"></i>
+                                        <span> Sync HAWB </span>
+                                    </span>
+                                </button>
+                            </div>
+                        </ng-container>
+                    </div>
+                </form-create-air>
+                <grant-total-profit></grant-total-profit>
+            </tab>
+            <tab heading="HAWB List" (selectTab)="onSelectTab('hbl')" [active]="selectedTab === 'HBL'"
+                [disabled]="ACTION === 'COPY'">
+                <ng-container *ngIf="selectedTab === 'HBL'">
+                </ng-container>
+            </tab>
+            <tab heading="Debit Note & Credit Note" (selectTab)="onSelectTab('cdNote')" [disabled]="ACTION === 'COPY'"
+                [active]="selectedTab === 'CDNOTE'">
+                <ng-container *ngIf="selectedTab === 'CDNOTE'" loadModule="AirExport_cdNote">
+                </ng-container>
+            </tab>
+            <tab heading="Assignment" (selectTab)="onSelectTab('assignment')" [active]="selectedTab === 'ASSIGNMENT'"
+                [disabled]="ACTION === 'COPY'">
+                <ng-container *ngIf="selectedTab === 'ASSIGNMENT'" loadModule="AirExport_assignment">
+                </ng-container>
+            </tab>
+            <tab heading="Attach Files" (selectTab)="onSelectTab('files')" [active]="selectedTab === 'FILES'"
+                [disabled]="ACTION === 'COPY'">
+                <ng-container *ngIf="selectedTab === 'FILES'" loadModule="AirExport_attachFile">
+                </ng-container>
+            </tab>
+        </tabset>
+    </div>
+    <ul class="m-nav-sticky fms-shipment-sidebar" *ngIf="ACTION !== 'COPY'">
+        <li class="m-nav-sticky__item">
+            <a title="Preview Manifest" [routerLink]="['./manifest']">MNF</a>
+        </li>
+        <li class="m-nav-sticky__item">
+            <a title="Open MAWB Detail Form" [routerLink]="['./mawb']">MAWB</a>
+        </li>
+    </ul>
+</div>
+
+<ng-container *ngIf="dataReport">
+    <app-report-preview [data]="dataReport"></app-report-preview>
+</ng-container>
+
+<info-popup [body]="'Opps, It looks like you missed something, Please recheck the highlighted field below.'"
+    [title]="'Cannot Create Job'"></info-popup>
+
+<confirm-popup #duplicateconfirmTemplate
+    [body]="'The system will open the Job Create Screen. Are you sure you want to leave?'"
+    [title]="'Duplicate job detail'" [labelConfirm]="'Yes'" (onSubmit)="duplicateConfirm()"></confirm-popup>
+
+<confirm-popup #confirmDeleteJob [body]="'You you sure you want to delete this Job'" [title]="'Alert'"
+    [labelConfirm]="'Yes'" (onSubmit)="confirmDeleteJob.show(); onDeleteJob()"></confirm-popup>
+
+<confirm-popup #confirmLockShipment (onSubmit)="onLockShipment()" [body]="'Do you want to lock this shipment ?'"
+    [labelConfirm]="'Yes'"></confirm-popup>
+
+
+<confirm-popup #confirmSyncHBL (onSubmit)="confirmSyncHBL.hide(); onSyncHBL()" [body]="confirmSyncHBLText"
+    title="Sync HAWB" [labelConfirm]="'Yes'">
+</confirm-popup>
+
+<confirm-popup #confirmCancelPopup body="All entered data will be discard. Are you sure you want to leave?"
+    (onSubmit)="confirmCancelPopup.hide(); gotoList()"></confirm-popup>
+
+<info-popup [body]="'You are not allowed to delete this job'"></info-popup>
+<permission-403-popup></permission-403-popup>

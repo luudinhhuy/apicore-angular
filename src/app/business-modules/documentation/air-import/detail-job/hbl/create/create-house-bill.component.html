@@ -1,0 +1,39 @@
+<div class="sea-fcl-create-hbl-page">
+    <app-sub-header>
+        <div class="c-button-actions">
+            <app-default-button *ngIf="allowAdd" [buttonSetting]="importButtonSetting" (click)="showImportPopup()">
+            </app-default-button>
+            <app-default-button *ngIf="allowAdd" [buttonSetting]="saveButtonSetting" (onClick)="confirmSave.show()">
+            </app-default-button>
+            <app-default-button [buttonSetting]="cancelButtonSetting" (onClick)="gotoList()"></app-default-button>
+        </div>
+    </app-sub-header>
+</div>
+
+<div class="m-content">
+    <div class="m-portlet__body">
+        <tabset class="custom-class-tab">
+            <tab heading="HAWB Detail">
+                <air-import-hbl-form-create></air-import-hbl-form-create>
+            </tab>
+            <tab heading="Arrival Notice">
+                <arrival-note-air></arrival-note-air>
+            </tab>
+            <tab heading="Authorize Letter">
+                <ng-container>
+                    <hbl-delivery-order [isAir]="true">
+                    </hbl-delivery-order>
+                </ng-container>
+            </tab>
+        </tabset>
+    </div>
+</div>
+<import-house-bill-detail (onImport)="onImport($event)" [jobId]="jobId" [typeTransaction]="3">
+</import-house-bill-detail>
+<confirm-popup #confirmSave body="You are about to create a new HAWB. Are you sure all entered details are correct?"
+    (onSubmit)="saveHBL()"></confirm-popup>
+
+<info-popup body="Opps, It looks like you missed something, Please recheck the highlighted field below.'"
+    [title]="'Cannot Update HB'"></info-popup>
+<confirm-popup #confirmSaveExistedHbl body="HAWB No has existed, do you want to continue saving?"
+    (onSubmit)="confirmSaveData()" title="HAWB Existed"></confirm-popup>

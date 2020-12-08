@@ -1,0 +1,147 @@
+<div class="m-portlet">
+    <div class="m-form">
+        <div class="m-portlet__body">
+            <form [formGroup]="formSearch">
+                <div class="row">
+                    <div class="col-lg-8">
+                        <div class="form-group">
+                            <label class="form-control-label">
+                                Search text
+                            </label>
+                            <input type="text" class="form-control m-input m-input--square" autocomplete="nope"
+                                placeholder="Search text" formControlName="searchText">
+                        </div>
+                    </div>
+                    <div class="col-lg-4">
+                        <div class="form-group">
+                            <label class="form-control-label" for="">
+                                Select filter
+                            </label>
+                            <select class="form-control" formControlName="filterType">
+                                <option *ngFor="let type of filterTypes" [ngValue]="type">{{type.title}}</option>
+                            </select>
+                        </div>
+                    </div>
+                </div>
+                <div class="collapse" [collapse]="isCollapsed" [isAnimated]="true" (collapsed)="collapsed()">
+                    <div class="div-inside bg-secondary">
+                        <div class="row">
+                            <div class="col-lg-4">
+                                <div class="form-group">
+                                    <label class="form-control-label" for="">
+                                        Product Service
+                                    </label>
+                                    <select class="form-control" formControlName="productService">
+                                        <option value="null">Select Product Service</option>
+                                        <option *ngFor="let productService of productServices"
+                                            [ngValue]="productService">{{productService.displayName}}</option>
+                                    </select>
+                                </div>
+                            </div>
+                            <div class="col-lg-4">
+                                <div class="form-group">
+                                    <label class="form-control-label" for="">
+                                        Service Mode
+                                    </label>
+                                    <select class="form-control" formControlName="serviceMode">
+                                        <option value="null">Select Service Mode</option>
+                                        <option *ngFor="let serviceMode of serviceModes" [ngValue]="serviceMode">
+                                            {{serviceMode.displayName}}
+                                        </option>
+                                    </select>
+                                </div>
+                            </div>
+                            <div class="col-lg-4">
+                                <div class="form-group">
+                                    <label class="form-control-label" for="">
+                                        Shipment Mode
+                                    </label>
+                                    <select class="form-control" formControlName="shipmentMode">
+                                        <option value="null">Select Service Mode</option>
+                                        <option *ngFor="let shipmentMode of shipmentModes" [ngValue]="shipmentMode">
+                                            {{shipmentMode.displayName}}
+                                        </option>
+                                    </select>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-lg-4">
+                                <div class="form-group">
+                                    <label class="form-control-label" for="">
+                                        Customer (Payer)
+                                    </label>
+                                    <app-combo-grid-virtual-scroll [currentActiveItemId]="selectedPartner"
+                                        (itemSelected)="onSelectDataFormInfo($event, 'partner')"
+                                        [selectedDisplayFields]="configPartner.selectedDisplayFields"
+                                        [dataSources]="configPartner.dataSource"
+                                        [displayFields]="configPartner.displayFields" [height]="200"
+                                        placeholder="Select customer">
+                                    </app-combo-grid-virtual-scroll>
+                                </div>
+                            </div>
+                            <div class="col-lg-4">
+                                <div class="form-group">
+                                    <label class="form-control-label" for="">
+                                        Field OPS
+                                    </label>
+                                    <select class="form-control" formControlName="user">
+                                        <option value="null">Select User</option>
+                                        <option *ngFor="let user of users" [ngValue]="user">{{user.username}}
+                                        </option>
+                                    </select>
+                                </div>
+                            </div>
+                            <div class="col-lg-4">
+                                <div class="form-group form-control-serviceDateFromTo daterange-rtl">
+                                    <label class="form-control-label" for="">
+                                        Service Date From - To
+                                    </label>
+                                    <input type="text" class="form-control m-input m-input--square" ngxDaterangepickerMd
+                                        [autoApply]="true" [locale]="{applyLabel: 'apply', format: 'DD/MM/YYYY'}"
+                                        [ranges]="ranges" [maxDate]="maxDate" [alwaysShowCalendars]="true"
+                                        formControlName="serviceDate" name="daterange" placeholder="From date - to date"
+                                        readonly />
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="form-actions">
+                    <div class="row">
+                        <div class="col-lg-6">
+                            <a class="btn btn-link collapsed" role="button" aria-expanded="false" data-toggle="collapse"
+                                (click)="isCollapsed = !isCollapsed">
+                                <span>
+                                    <i class="la"
+                                        [ngClass]="{'la-angle-up': !isCollapsed, 'la-angle-down': isCollapsed}"></i>
+                                    <span>Advance Search</span>
+                                </span>
+                            </a>
+                        </div>
+                        <div class="col-lg-6 m--align-right">
+                            <button type="submit" class="btn btn-brand m-btn--square m-btn--icon m-btn--uppercase"
+                                (click)="searchShipment()">
+                                <span>
+                                    <i class="la la-search"></i>
+                                    <span>
+                                        Search
+                                    </span>
+                                </span>
+                            </button>
+                            <button type="button" class="btn btn-default m-btn--square m-btn--icon m-btn--uppercase"
+                                (click)="resetSearch()">
+                                <span>
+                                    <i class="la la-refresh"></i>
+                                    <span>
+                                        Reset
+                                    </span>
+                                </span>
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>

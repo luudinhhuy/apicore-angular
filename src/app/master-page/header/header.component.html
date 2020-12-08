@@ -1,0 +1,267 @@
+<div class="m-container m-container--fluid m-container--full-height">
+    <div class="m-stack m-stack--ver m-stack--desktop">
+        <div class="m-stack__item m-brand  m-brand--skin-dark ">
+            <div class="m-stack m-stack--ver m-stack--general">
+                <div class="m-stack__item m-stack__item--middle m-brand__logo">
+                    <a href="javascript:void(0)" class="m-brand__logo-wrapper" routerLink="/home/dashboard">
+                        <img alt="eFMS" src="assets/demo/default/media/img/logo/logo-web.png">
+                    </a>
+                </div>
+                <div class="m-stack__item m-stack__item--middle m-brand__tools">
+                    <a href="javascript:;" id="m_aside_left_minimize_toggle"
+                        class="m-brand__icon m-brand__toggler m-brand__toggler--left m--visible-desktop-inline-block"
+                        (click)="minimize_page_sidebar()">
+                        <span></span>
+                    </a>
+                    <a href="javascript:;" id="m_aside_left_offcanvas_toggle"
+                        class="m-brand__icon m-brand__toggler m-brand__toggler--left m--visible-tablet-and-mobile-inline-block">
+                        <span></span>
+                    </a>
+                </div>
+            </div>
+        </div>
+        <div class="m-stack__item m-stack__item--fluid m-header-head" id="m_header_nav">
+            <button class="m-aside-header-menu-mobile-close  m-aside-header-menu-mobile-close--skin-dark "
+                id="m_aside_header_menu_mobile_close_btn">
+                <i class="la la-close"></i>
+            </button>
+            <div class="m-header-menu">
+                <h3 class="m-subheader__title">{{pageTitle}}</h3>
+            </div>
+            <div class="m-topbar m-stack m-stack--ver m-stack--general" id="m_header_topbar">
+                <div class="m-stack__item m-topbar__nav-wrapper">
+                    <ul class="m-topbar__nav m-nav m-nav--inline">
+                        <!-- <li class="m-nav__item m-list-search m-list-search--skin-light">
+                            <a class="m-nav__link m-dropdown__toggle" href="javascript:void(0)"  data-toggle="dropdown">
+                                <span class="m-nav__link-icon">
+                                    <i class="la la-search"></i>
+                                </span>
+                            </a>
+                            <div class="dropdown-menu dropdown-menu-right" style="padding: 0;">
+                                <div class="m-dropdown__header" style="width: 380px; padding: 20px;">
+                                    <form class="m-list-search__form">
+                                        <div class="m-list-search__form-wrapper">
+                                            <span class="m-list-search__form-input-wrapper">
+                                                <input class="m-list-search__form-input" id="m_quicksearch_input" autocomplete="off"  placeholder="Search..." type="text" value="">
+                                            </span>
+                                            <span class="m-list-search__form-icon-close" id="m_quicksearch_close">
+                                                <i class="la la-remove">
+                                                </i>
+                                            </span>
+                                        </div>
+                                    </form>
+                                </div>
+                            </div>
+                        </li> -->
+                        <!-- <li class="m-nav__item m-topbar__notifications">
+                            <a class="m-nav__link m-dropdown__toggle" href="javascript:void(0)" data-toggle="dropdown">
+                                <span class="m-nav__link-badge m-badge m-badge--danger">3</span>
+                                <span class="m-nav__link-icon">
+                                    <i class="la la-bell"></i>
+                                </span>
+                            </a>
+                            <div class="dropdown-menu" style="width: 340px; padding: 20px; border-radius: 2px;">
+                                <div class="m-list-timeline m-list-timeline--skin-light">
+                                    <div class="m-list-timeline__items">
+                                        <div class="m-list-timeline__item">
+                                            <span class="m-list-timeline__badge -m-list-timeline__badge--state-success">
+                                            </span>
+                                            <span class="m-list-timeline__text">
+                                                12 new users registered
+                                            </span>
+                                            <span class="m-list-timeline__time">
+                                                Just now
+                                            </span>
+                                        </div>
+                                        <div class="m-list-timeline__item">
+                                            <span class="m-list-timeline__badge">
+                                            </span>
+                                            <span class="m-list-timeline__text">
+                                                System shutdown
+                                                <span class="m-badge m-badge--success m-badge--wide">
+                                                    pending
+                                                </span>
+                                            </span>
+                                            <span class="m-list-timeline__time">
+                                                14 mins
+                                            </span>
+                                        </div>
+                                        <div class="m-list-timeline__item">
+                                            <span class="m-list-timeline__badge">
+                                            </span>
+                                            <span class="m-list-timeline__text">
+                                                New invoice received
+                                            </span>
+                                            <span class="m-list-timeline__time">
+                                                20 mins
+                                            </span>
+                                        </div>
+                                        <div class="m-list-timeline__item">
+                                            <span class="m-list-timeline__badge">
+                                            </span>
+                                            <span class="m-list-timeline__text">
+                                                DB overloaded 80%
+                                                <span class="m-badge m-badge--info m-badge--wide">
+                                                    settled
+                                                </span>
+                                            </span>
+                                            <span class="m-list-timeline__time">
+                                                1 hr
+                                            </span>
+                                        </div>
+                                        <div class="m-list-timeline__item">
+                                            <span class="m-list-timeline__badge">
+                                            </span>
+                                            <span class="m-list-timeline__text">
+                                                System error -
+                                                <a class="m-link" href="#">
+                                                    Check
+                                                </a>
+                                            </span>
+                                            <span class="m-list-timeline__time">
+                                                2 hrs
+                                            </span>
+                                        </div>
+                                        <div class="m-list-timeline__item m-list-timeline__item--read">
+                                            <span class="m-list-timeline__badge">
+                                            </span>
+                                            <span class="m-list-timeline__text" href="">
+                                                New order received
+                                                <span class="m-badge m-badge--danger m-badge--wide">
+                                                    urgent
+                                                </span>
+                                            </span>
+                                            <span class="m-list-timeline__time">
+                                                7 hrs
+                                            </span>
+                                        </div>
+                                        <div class="m-list-timeline__item m-list-timeline__item--read">
+                                            <span class="m-list-timeline__badge">
+                                            </span>
+                                            <span class="m-list-timeline__text">
+                                                Production server down
+                                            </span>
+                                            <span class="m-list-timeline__time">
+                                                3 hrs
+                                            </span>
+                                        </div>
+                                        <div class="m-list-timeline__item">
+                                            <span class="m-list-timeline__badge">
+                                            </span>
+                                            <span class="m-list-timeline__text">
+                                                Production server up
+                                            </span>
+                                            <span class="m-list-timeline__time">
+                                                5 hrs
+                                            </span>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </li> -->
+                        <li class="m-nav__item topbar__lang">
+                            <a class="m-nav__link m-dropdown__toggle pointer" data-toggle="dropdown">
+                                <span class="m-nav__link-icon">
+                                    <i class="la la-building-o"></i>
+                                </span>
+                                <span class="m-nav__link-text" *ngIf="!!selectedOffice">
+                                    {{selectedOffice.branchNameEn}}
+                                </span>
+                            </a>
+                            <div class="dropdown-menu" style="min-width: 160px">
+                                <ul class="m-nav">
+                                    <li class="m-nav__item pointer" *ngFor="let office of offices; let i = index"
+                                        (click)="changeOffice(office)">
+                                        <a class="m-nav__link" data-toggle="modal" data-target="#change-office-modal">
+                                            <span class="m-nav__link-text">
+                                                {{office.branchNameEn}}
+                                            </span>
+                                        </a>
+                                    </li>
+                                </ul>
+                            </div>
+                        </li>
+                        <li class="m-nav__item topbar__lang">
+                            <a class="m-nav__link m-dropdown__toggle pointer" data-toggle="dropdown">
+                                <span class="m-nav__link-icon">
+                                    <i class="la la-users"></i>
+                                </span>
+                                <span class="m-nav__link-text" *ngIf="!!selectedDepartmentGroup">
+                                    {{selectedDepartmentGroup.departmentName}} - {{selectedDepartmentGroup.groupName}}
+                                </span>
+                            </a>
+                            <div class="dropdown-menu" style="min-width: 160px">
+                                <ul class="m-nav">
+                                    <li class="m-nav__item pointer" *ngFor="let item of departmentGroups"
+                                        (click)="changeDepartmentGroup(item)">
+                                        <a class="m-nav__link active" data-toggle="modal"
+                                            data-target="#change-group-modal">
+                                            <span class="m-nav__link-text">
+                                                {{item.departmentName}} - {{item.groupName}}
+                                            </span>
+                                        </a>
+                                    </li>
+                                </ul>
+                            </div>
+                        </li>
+                        <li class="m-nav__item topbar__lang">
+                            <a class="m-nav__link m-dropdown__toggle" href="javascript:void(0)" data-toggle="dropdown">
+                                <span class="m-topbar__userpic" *ngIf="active_flag">
+                                    <img alt="eFMS" class="m--img-rounded m--marginless m--img-centered"
+                                        [src]="active_flag" />
+                                </span>
+                            </a>
+                            <div class="dropdown-menu" style="min-width: 160px">
+                                <ul class="m-nav">
+                                    <li class="m-nav__item">
+                                        <a class="m-nav__link active" href="javascript:void(0)"
+                                            (click)="changeLanguage('en')">
+                                            <span class="m-nav__link-icon" *ngIf="english_flag">
+                                                <img alt="eFMS" class="m--img-rounded m--marginless m--img-centered"
+                                                    [src]="english_flag" />
+                                            </span>
+                                            <span class="m-nav__link-text">
+                                                English
+                                            </span>
+                                        </a>
+                                    </li>
+                                    <li class="m-nav__item">
+                                        <a class="m-nav__link" href="javascript:void(0)" (click)="changeLanguage('vi')">
+                                            <span class="m-nav__link-icon" *ngIf="vietnam_flag">
+                                                <img alt="eFMS" class="m--img-rounded m--marginless m--img-centered"
+                                                    [src]="vietnam_flag" />
+                                            </span>
+                                            <span class="m-nav__link-text">
+                                                Vietnamese
+                                            </span>
+                                        </a>
+                                    </li>
+                                </ul>
+                            </div>
+                        </li>
+                        <li class="m-nav__item m-topbar__user-profile">
+                            <a class="m-nav__link" href="javascript:void(0)">
+                                <span class="m-topbar__userpic">
+                                    <img alt="eFMS" class="m--img-rounded m--marginless m--img-centered"
+                                        src="assets/app/media/img/users/user4.jpg" />
+                                </span>
+                                <span class="m-topbar__username"
+                                    style="color: #3966b6; font-size: 14px; text-transform: capitalize; padding-left: 10px;">
+                                    {{!!currenUser ? currenUser.preferred_username : null}}
+                                </span>
+                            </a>
+                        </li>
+                        <li class="m-nav__item">
+                            <a class="m-nav__link" href="javascript:void(0)" data-toggle="modal"
+                                data-target="#logout-modal">
+                                <span class="m-nav__link-icon">
+                                    <i class="la la-power-off"></i>
+                                </span>
+                            </a>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

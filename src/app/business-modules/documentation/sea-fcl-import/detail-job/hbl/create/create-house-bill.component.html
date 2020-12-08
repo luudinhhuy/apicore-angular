@@ -1,0 +1,42 @@
+<div class="sea-fcl-create-hbl-page">
+    <app-sub-header>
+        <div class="c-button-actions">
+            <app-default-button *ngIf="allowAdd" (click)="showImportPopup()" [buttonSetting]="importButtonSetting">
+            </app-default-button>
+            <app-default-button *ngIf="allowAdd" (click)="showCreatePpoup()" [buttonSetting]="saveButtonSetting">
+            </app-default-button>
+            <app-default-button (click)="combackToHBLList()" [buttonSetting]="cancelButtonSetting"></app-default-button>
+        </div>
+    </app-sub-header>
+
+</div>
+
+<div class="m-content">
+    <div class="m-portlet__body">
+
+        <tabset class="custom-class-tab">
+            <tab heading="HBL Detail" [active]="true">
+                <form-create-house-bill-import> </form-create-house-bill-import>
+                <hbl-goods-summary-fcl>HBL Goods Summary</hbl-goods-summary-fcl>
+            </tab>
+            <tab heading="Arrival Notice">
+                <hbl-arrival-note-sea></hbl-arrival-note-sea>
+            </tab>
+            <tab heading="Delivery Order (D/O)" (selectTab)="onSelectTabDO()">
+                <ng-container>
+                    <hbl-delivery-order></hbl-delivery-order>
+                </ng-container>
+            </tab>
+        </tabset>
+    </div>
+</div>
+
+<info-popup [body]="'Opps, It looks like you missed something, Please recheck the highlighted field below.'"
+    [title]="'Cannot Create HBL'"></info-popup>
+
+<confirm-popup [body]="'You are about to create a new  HBL, are you sure all entered details are correct?'"
+    [labelCancel]="'No'" (onSubmit)="oncreate()" title="Save HBL">
+</confirm-popup>
+
+<import-house-bill-detail (onImport)="onImport($event)" [jobId]="jobId" [typeTransaction]="7">
+</import-house-bill-detail>

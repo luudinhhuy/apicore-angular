@@ -1,0 +1,54 @@
+<div class="row align-items-center pointer" *ngIf="!!data">
+    <div class="col-1">
+        <div class="d-flex">
+            <a class="m--margin-right-10">
+                <i class="la la-angle-double-down"></i>
+            </a>
+            <a (click)="checkUncheckAllRequest($event)">
+                <label class="m-checkbox m-checkbox--bold">
+                    <input type="checkbox" [(ngModel)]="isCheckAll">
+                    <span></span>
+                </label>
+            </a>
+            <!-- <a>
+                <i class="la la-file-text"></i>
+            </a> -->
+        </div>
+    </div>
+    <div class="col">
+        <div class="d-flex">
+            <span class="font-weight-bold">Job:</span>
+            &nbsp;
+            <span> {{data.jobId}} </span>
+        </div>
+    </div>
+    <div class="col">
+        <div class="d-flex">
+            <span class="font-weight-bold">HBL:</span>
+            &nbsp;
+            <span> {{data.hbl}} </span>
+        </div>
+    </div>
+    <div class="col">
+        <div class="d-flex">
+            <span class="font-weight-bold">MBL:</span>
+            &nbsp;
+            <span> {{data.mbl}} </span>
+        </div>
+    </div>
+    <div class="col">
+        <div class="d-flex align-items-center">
+            <span class="font-weight-bold">Total Amount:</span>
+            &nbsp;
+            <span> {{data.totalAmount | number: '.0-3'}} </span>
+            &nbsp;
+            <span> {{ data.currencyShipment | uppercase }} </span>
+        </div>
+    </div>
+    <div class="col">
+        <a (click)="showPaymentManagement($event, data)" class="text-underline text-primary">Payment
+            Management</a>
+    </div>
+</div>
+
+<payment-management-popup></payment-management-popup>

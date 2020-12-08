@@ -1,0 +1,167 @@
+<div class="advance-payment-page">
+    <app-sub-header>
+        <div class="c-button-actions">
+            <app-permission-button title="Add New" [routerLink]="'/home/accounting/advance-payment/new'">
+            </app-permission-button>
+            <app-permission-button type="export" title="Export" (onClick)="export()"></app-permission-button>
+        </div>
+    </app-sub-header>
+    <div class="m-content">
+        <adv-payment-form-search (onSearch)="onSearchAdvPayment($event)"></adv-payment-form-search>
+        <div class="m-portlet">
+            <div class="m-form">
+                <div class="m-portlet__body">
+                    <perfect-scrollbar style="max-height: 900px">
+                        <div class="table-wrapper table-scrollable" id="adv-payment-list-table">
+                            <table class="table table-brand table-hover dataTable">
+                                <thead app-table-header [headers]="headers"
+                                    (onClick)="sortBy($event.sortField ? $event.sortField : '')">
+                                    <th class="m--w-50 first">
+                                    </th>
+                                </thead>
+                                <tbody class="tbody-group">
+                                    <ng-container
+                                        *ngFor="let advancePayment of advancePayments; let i = index; trackBy: trackByFn">
+                                        <tr class="">
+                                            <td>
+                                                <div class="m-checkbox-list d-flex align-items-center">
+                                                    <button
+                                                        (click)="getRequestAdvancePaymentGroup(advancePayment.advanceNo, i)"
+                                                        class="btn btn-sm m-btn--square m-btn--icon m-btn--icon-only collapsed"
+                                                        [attr.data-target]="'#collapse' + i" data-toggle="collapse"
+                                                        title="Collapse" type="button">
+                                                        <i class="la la-angle-up"></i>
+                                                    </button>
+                                                    <button
+                                                        [disabled]="advancePayment.statusApproval !== 'New' && advancePayment.statusApproval !== 'Denied'"
+                                                        class="btn btn-sm m-btn--square m-btn--icon m-btn--icon-only"
+                                                        title="Delete advance payment"
+                                                        (click)="prepareDeleteAdvance(advancePayment)">
+                                                        <i class="la la-trash text-danger"></i>
+                                                    </button>
+                                                </div>
+                                            </td>
+                                            <td class="text-underline text-primary pointer">
+                                                <a (click)="viewDetail(advancePayment)">{{advancePayment.advanceNo}}
+                                                </a>
+                                            </td>
+                                            <td>{{advancePayment.amount | number: '.0-3'}}</td>
+                                            <td>{{advancePayment.advanceCurrency}}</td>
+                                            <td>{{advancePayment.requesterName}}</td>
+                                            <td>{{advancePayment.requestDate | date: 'dd/MM/yyyy'}}</td>
+                                            <td>{{advancePayment.deadlinePayment | date: 'dd/MM/yyyy'}}</td>
+                                            <td>{{advancePayment.datetimeModified | date: 'dd/MM/yyyy'}}</td>
+                                            <td [ngSwitch]="advancePayment.statusApprovalName">
+                                                <div *ngSwitchCase="'New'" class="text-danger">
+                                                    {{advancePayment.statusApprovalName}}</div>
+                                                <div *ngSwitchCase="'Done'" class="text-success">
+                                                    {{advancePayment.statusApprovalName}}</div>
+                                                <div *ngSwitchCase="'Denied'" class="text-danger">
+                                                    {{advancePayment.statusApprovalName}}</div>
+                                                <div *ngSwitchDefault class="text-primary">
+                                                    {{advancePayment.statusApprovalName}}
+                                                </div>
+                                            </td>
+                                            <td [ngSwitch]="advancePayment.advanceStatusPayment">
+                                                <ng-container
+                                                    *ngIf="advancePayment.statusApproval === 'Done' else empty">
+                                                    <div class="text-success" *ngSwitchCase="'Settled'">
+                                                        {{advancePayment.advanceStatusPayment}}
+                                                    </div>
+                                                    <div class="text-danger" *ngSwitchCase="'NotSettled'">
+                                                        Not Settled
+                                                    </div>
+                                                    <div class="text-danger" *ngSwitchCase="'PartialSettlement'">
+                                                        Partial Settlement
+                                                    </div>
+                                                </ng-container>
+                                                <ng-template #empty>-</ng-template>
+                                            </td>
+                                            <td>{{advancePayment.paymentMethodName}}</td>
+                                            <td>{{advancePayment.advanceNote}}</td>
+                                        </tr>
+                                        <tr class="collapse-panel-row" app-table-collapse-row [id]="'collapse' + i"
+                                            [parentId]="'#adv-payment-list-table'">
+                                            <table class="table table-secondary dataTable">
+                                                <thead app-table-header [headers]="headerGroupRequest"
+                                                    (onClick)="sortByCollapse($event)">
+                                                </thead>
+                                                <tbody>
+                                                    <ng-container *ngIf="!isLoading && !!groupRequest.length">
+                                                        <tr class=""
+                                                            *ngFor="let request of groupRequest; let j = index; trackBy: trackByFn">
+                                                            <td>{{request.jobId}}</td>
+                                                            <td>{{request.customNo}}</td>
+                                                            <td>{{request.hbl}}</td>
+                                                            <td>{{request.amount | number :'.0-2'}}</td>
+                                                            <td>{{request.requestCurrency}}</td>
+                                                            <td [ngSwitch]="request.statusPayment">
+                                                                <ng-container
+                                                                    *ngIf="advancePayment.statusApproval === 'Done' else empty">
+                                                                    <div class="text-success" *ngSwitchCase="'Settled'">
+                                                                        {{request.statusPayment}}
+                                                                    </div>
+                                                                    <div class="text-danger"
+                                                                        *ngSwitchCase="'NotSettled'">
+                                                                        Not Settled
+                                                                    </div>
+                                                                    <div class="text-danger"
+                                                                        *ngSwitchCase="'PartialSettlement'">
+                                                                        Partial Settlement
+                                                                    </div>
+                                                                </ng-container>
+                                                                <ng-template #empty>-</ng-template>
+                                                            </td>
+                                                        </tr>
+                                                    </ng-container>
+                                                    <tr *ngIf="!isLoading && !groupRequest.length"
+                                                        app-table-none-record>
+                                                    </tr>
+                                                </tbody>
+                                            </table>
+                                        </tr>
+                                    </ng-container>
+                                    <tr *ngIf="!isLoading && !advancePayments.length" app-table-none-record
+                                        [colspan]="headers.length + 1">
+                                    </tr>
+                                    <tr class="loading-wrapper" *ngIf="isLoading" app-table-row-loading>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </perfect-scrollbar>
+                    <div class="pagination-nav">
+                        <div class="row">
+                            <div class="col-sm-6">
+                                <div class="tatable__pager-size">
+                                    <div class="select-box">
+                                        <select class="form-control" id="" aria-label="" [(ngModel)]="pageSize"
+                                            (change)="selectPageSize(pageSize, dataSearch)" name="pagesize">
+                                            <ng-container
+                                                *ngFor="let item of numberToShow; let i = index; trackBy: trackByFn">
+                                                <option [ngValue]="item">{{item}} line / screen</option>
+                                            </ng-container>
+                                        </select>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-sm-6" *ngIf="totalItems > pageSize">
+                                <div class="float-right">
+                                    <pagination [boundaryLinks]="true" [totalItems]="totalItems"
+                                        [itemsPerPage]="pageSize" (pageChanged)="pageChanged($event)"
+                                        [(ngModel)]="page">
+                                    </pagination>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<confirm-popup (onSubmit)="onDeleteAdvPayment()" [body]="'Do you want to delete ?'" [labelConfirm]="'Yes'"
+    [labelCancel]="'No'"></confirm-popup>
+
+<permission-403-popup></permission-403-popup>

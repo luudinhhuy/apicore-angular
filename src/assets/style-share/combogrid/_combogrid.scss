@@ -1,0 +1,119 @@
+//combogrid
+.e--combogrid {
+    .e--combogrid_icon {
+        position: absolute;
+        right: 10px;
+        top: 25%;
+        background: #fff;
+        i {
+            color: #6f727d;
+        }
+        .e--combogrid_icon__clear {
+            position: absolute;
+            right: 10px;
+            width: 17px;
+            background: #fff;
+            i {
+                font-size: 0.8rem;
+                font-weight: bold;
+
+                &:hover {
+                    color: red;
+                    cursor: pointer;
+                }
+            }
+        }
+        .e--combogrid_icon__dropdown {
+            i {
+                font-size: 1.3rem;
+            }
+        }
+    }
+    .on-loading {
+        position: absolute;
+        top: 60%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+    }
+    .dropdown-menu {
+        min-width: 100%;
+        padding: 0;
+        background-color: #fff;
+        -webkit-box-shadow: 0 2px 4px 0 rgba(0, 0, 0, 0.16),
+            0 2px 8px 0 rgba(0, 0, 0, 0.12);
+        box-shadow: 0 2px 4px 0 rgba(0, 0, 0, 0.16),
+            0 2px 8px 0 rgba(0, 0, 0, 0.12);
+        transform: translateX(0) !important;
+        -webkit-transform: translateX(0) !important;
+        -moz-transform: translateX(0) !important;
+        -ms-transform: translateX(0) !important;
+        -o-transform: translateX(0) !important;
+    }
+
+    .table {
+        min-width: 100%;
+        // table-layout: fixed;
+        white-space: inherit;
+        thead {
+            tr {
+                th {
+                    background-color: #f2dedf;
+                    color: #212529;
+                }
+            }
+        }
+
+        thead,
+        tbody {
+            tr {
+                th,
+                td {
+                    width: 100px;
+                    padding: 4px;
+                    border-bottom-width: 1px;
+                    font-size: 12px;
+                    word-break: break-word;
+                }
+
+                &.data-selected {
+                    td {
+                        background-color: #3965b6;
+                        color: #fff;
+                    }
+                }
+            }
+        }
+
+        &.table-hover {
+            tr {
+                &:hover {
+                    background-color: #e6e6e6;
+                }
+            }
+        }
+    }
+
+    .table-header {
+        // padding-right: 5px;
+        background-color: #f2dedf;
+    }
+
+    .table-body-scroll {
+        max-height: 100px;
+        overflow: auto;
+
+        .table {
+            tr {
+                th,
+                td {
+                    cursor: pointer;
+                }
+            }
+        }
+    }
+
+    .highlight {
+        font-weight: bold;
+        color: #f26522;
+    }
+}

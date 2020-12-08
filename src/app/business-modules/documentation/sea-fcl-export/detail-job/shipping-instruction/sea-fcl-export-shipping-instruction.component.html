@@ -1,0 +1,68 @@
+<app-sub-header>
+    <div class="c-button-actions">
+        <span *ngIf="(isLocked | async) === true" class="m--margin-right-10 align-middle">
+            <i class="fa fa-lock text-danger fa-3x"></i>
+        </span>
+        <div class="dropdown m-dropdown m-dropdown--inline">
+            <button class="btn btn-secondary dropdown-toggle" type="button" data-toggle="dropdown">
+                Preview SI
+            </button>
+            <div class="dropdown-menu">
+                <a class="dropdown-item">Export excel</a>
+                <a class="dropdown-item" (click)="previewSIReport()">Crystal Report</a>
+            </div>
+        </div>
+        <div class="dropdown m-dropdown m-dropdown--inline">
+            <button class="btn btn-secondary dropdown-toggle" type="button" data-toggle="dropdown">
+                Preview OCL
+            </button>
+            <div class="dropdown-menu">
+                <a class="dropdown-item">Export excel</a>
+                <a class="dropdown-item" (click)="previewOCL()">Crystal
+                    Report</a>
+            </div>
+        </div>
+        <ng-container *ngIf="(isLocked | async) === false">
+            <ng-container *ngIf="(permissionShipments | async)?.allowUpdate">
+                <button type="button" class="btn btn-default m-btn--square m-btn--icon m-btn--uppercase"
+                    (click)="confirmRefresh.show()">
+                    <span>
+                        <i class="la la-refresh"></i>
+                        <span>
+                            Refresh
+                        </span>
+                    </span>
+                </button>
+                <app-default-button [buttonSetting]="saveButtonSetting" (onClick)="save()"></app-default-button>
+            </ng-container>
+        </ng-container>
+
+        <app-default-button [buttonSetting]="cancelButtonSetting" (onClick)="back()"></app-default-button>
+
+    </div>
+</app-sub-header>
+
+<div class="m-content">
+    <div class="m-portlet__body">
+        <div class="row">
+            <div class="col-12">
+                <tabset class="custom-class-tab">
+                    <tab heading="Bill Instruction">
+                        <app-sea-fcl-export-bill-instruction>
+                        </app-sea-fcl-export-bill-instruction>
+                    </tab>
+                    <tab heading="Bill detail">
+                        <app-sea-fcl-export-bill-detail></app-sea-fcl-export-bill-detail>
+                    </tab>
+                </tabset>
+            </div>
+        </div>
+    </div>
+</div>
+
+<confirm-popup #confirmRefresh body="All manually entered data will be refresh. Are you sure you want to perform this
+action?" (onSubmit)="confirmRefresh.hide(); refresh()"></confirm-popup>
+
+<ng-container *ngIf="dataReport">
+    <app-report-preview [data]="dataReport"></app-report-preview>
+</ng-container>

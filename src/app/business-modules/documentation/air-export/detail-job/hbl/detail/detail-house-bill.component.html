@@ -1,0 +1,70 @@
+<div class="sea-fcl-create-hbl-page">
+    <app-sub-header>
+        <div class="c-button-actions">
+            <div class="dropdown m-dropdown m-dropdown--inline">
+                <ng-container *ngIf="(isLocked | async) === false">
+                    <button *ngIf="allowUpdate" class="btn btn-success m-btn--square m-btn--icon m-btn--uppercase"
+                        (click)="gotoSeparate()">
+                        <span>
+                            <i class="la la-plus"></i>
+                            <span>
+                                Separate HAWB
+                            </span>
+                        </span> </button>
+                </ng-container>
+                <button class="btn btn-default dropdown-toggle" type="button" data-toggle="dropdown">
+                    <i class="la la-print"></i>Preview<span class="caret"></span>
+                </button>
+                <div class="dropdown-menu">
+                    <a class="dropdown-item pointer" (click)="preview('LASTEST_ITL')">ITL AWB Preview</a>
+                    <a class="dropdown-item pointer" (click)="preview('LASTEST_ITL_FRAME')">ITL AWB (Frame) Preview</a>
+                    <a class="dropdown-item pointer" (click)="previewAttachList()">Attach List Preview</a>
+                    <a class="dropdown-item pointer" (click)="exportNeutralHawb()">Print NEUTRAL HAWB</a>
+                    <a class="dropdown-item pointer" (click)="openInputBookingNote('BN_SCSC')">Booking Note SCSC
+                        Preview</a>
+                    <a class="dropdown-item pointer" (click)="openInputBookingNote('BN_TCS')">Booking Note TCS
+                        Preview</a>
+                </div>
+            </div>
+            <ng-container *ngIf="(isLocked | async) === false">
+                <app-default-button *ngIf="allowUpdate" [buttonSetting]="saveButtonSetting"
+                    (onClick)="confirmSave.show()">
+                </app-default-button>
+            </ng-container>
+            <app-default-button [buttonSetting]="cancelButtonSetting" (onClick)="confirmCancelPopup.show()">
+            </app-default-button>
+        </div>
+    </app-sub-header>
+</div>
+
+<div class="m-content">
+    <div class="m-portlet__body">
+        <tabset class="custom-class-tab">
+            <tab heading="HAWB Detail">
+                <air-export-hbl-form-create [isUpdate]="true"></air-export-hbl-form-create>
+            </tab>
+            <tab heading="Attach List">
+                <air-export-hbl-attach-list></air-export-hbl-attach-list>
+            </tab>
+        </tabset>
+    </div>
+</div>
+
+<confirm-popup #confirmSave body="You are about to update HBL.
+Are you sure all entered details are correct?" (onSubmit)="saveHBL()" title="Update HBL"></confirm-popup>
+
+
+<info-popup body="Opps, It looks like you missed something, Please recheck the highlighted field below.'"
+    [title]="'Cannot Update HB'"></info-popup>
+
+<ng-container *ngIf="dataReport">
+    <app-report-preview [data]="dataReport"></app-report-preview>
+</ng-container>
+
+<confirm-popup #confirmCancelPopup body="All entered data will be discard. Are you sure you want to leave?"
+    (onSubmit)="confirmCancelPopup.hide();gotoList()"></confirm-popup>
+<confirm-popup #confirmSaveExistedHbl body="HAWB No has existed, do you want to continue saving?"
+    (onSubmit)="confirmUpdateData()" title="HAWB Existed"></confirm-popup>
+
+
+<input-booking-note-popup></input-booking-note-popup>

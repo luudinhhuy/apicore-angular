@@ -1,0 +1,145 @@
+<app-sub-header>
+    <div class="c-button-actions" *ngIf="!!opsTransaction && !opsTransaction.isLocked">
+        <button type="button" class="btn btn-warning m-btn--square m-btn--icon m-btn--uppercase m--margin-right-10"
+            (click)="lockShipment()">
+            <span>
+                <i class="la la-lock"></i>
+                <span>
+                    Lock
+                </span>
+            </span>
+        </button>
+    </div>
+    <span *ngIf="!!opsTransaction && !!opsTransaction.isLocked" class="m--margin-right-10">
+        <i class="fa fa-lock text-danger fa-3x"></i>
+    </span>
+    <div class="c-button-actions">
+        <button type="button" class="btn btn-success m-btn--square m-btn--icon m-btn--uppercase m--margin-right-10"
+            (click)="onOpePLPrint()">
+            <span>
+                <i class="la la-print"></i>
+                <span>
+                    P/L Sheet
+                </span>
+            </span>
+        </button>
+    </div>
+    <ng-container *ngIf="!!opsTransaction && opsTransaction.isLocked === false">
+        <div class="c-button-actions">
+            <button class="btn btn-brand m-btn--square m-btn--icon m-btn--uppercase m--margin-right-10"
+                *ngIf="!!opsTransaction && opsTransaction.permission.allowUpdate" (click)="saveShipment()">
+                <span>
+                    <i class="la la la-save"></i>
+                    <span>
+                        save
+                    </span>
+                </span>
+            </button>
+        </div>
+        <div class="c-button-actions" *ngIf="!!opsTransaction && !opsTransaction.isLocked">
+            <button type="button" class="btn btn-danger m-btn--square m-btn--icon m-btn--uppercase m--margin-right-10"
+                (click)="checkDelete()" *ngIf="opsTransaction.permission.allowDelete" title="Shipment was deleted">
+                <span>
+                    <i class="la la-trash"></i>
+                    <span>
+                        delete
+                    </span>
+                </span>
+            </button>
+        </div>
+    </ng-container>
+
+
+    <app-default-button [buttonSetting]="cancelButtonSetting" (onClick)=confirmCancelJob()></app-default-button>
+
+</app-sub-header>
+
+<div class="m-content">
+    <div class="m-portlet__body">
+        <div class="row">
+            <div class="col-12">
+                <tabset type="tabs" class="custom-class-tab">
+                    <tab heading="Job detail" (selectTab)="selectTab('job-edit')">
+                        <div *ngIf="tab === 'job-edit'">
+                            <div class="m-form m-form--state">
+                                <div class="m-portlet">
+                                    <div class="alert-block__heading">
+                                        <h3 class="alert-block__title">Job Information</h3>
+                                    </div>
+                                    <div class="m-portlet__body" id="edit-ops-job-form">
+                                        <job-mangement-form-edit></job-mangement-form-edit>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="m-portlet">
+                                <div class="m-portlet__body">
+                                    <tabset class="custom-class-tab">
+                                        <tab heading="Buying" (selectTab)="getSurCharges('BUY')">
+                                            <ng-container
+                                                *ngIf="!!opsTransaction && opsTransaction.hblid; else placeholder">
+                                                <buying-charge [showGetCharge]="false" service="logistic">
+                                                </buying-charge>
+                                            </ng-container>
+                                        </tab>
+                                        <tab heading="Selling" (selectTab)="getSurCharges('SELL')">
+                                            <ng-container
+                                                *ngIf="!!opsTransaction && opsTransaction.hblid; else placeholder">
+                                                <selling-charge service="logistic" [showSyncFreight]="false"
+                                                    [showGetCharge]="false">
+                                                </selling-charge>
+                                            </ng-container>
+                                        </tab>
+                                        <tab heading="OBH" (selectTab)="getSurCharges('OBH')">
+                                            <ng-container
+                                                *ngIf="!!opsTransaction && opsTransaction.hblid; else placeholder">
+                                                <obh-charge service="logistic"></obh-charge>
+                                            </ng-container>
+                                        </tab>
+                                    </tabset>
+                                </div>
+                            </div>
+
+                            <hbl-profit-summary></hbl-profit-summary>
+                        </div>
+                    </tab>
+                    <tab heading="Custom declaration" (selectTab)="selectTab('custom-declaration')">
+                        <ng-container *ngIf="tab === 'custom-declaration'" loadModule="cd">
+                        </ng-container>
+                    </tab>
+                    <tab heading="Credit Note & Debit Note" (selectTab)="selectTab('cre-debit-note')">
+                        <ng-container *ngIf="tab === 'cre-debit-note'" loadModule="cdNote">
+                        </ng-container>
+                    </tab>
+                    <tab heading="Stage management" [active]="tab === 'stage'" (selectTab)="selectTab('stage')">
+                        <ng-container *ngIf="tab === 'stage'" loadModule="stageManagement"></ng-container>
+                    </tab>
+                </tabset>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+<container-list-popup></container-list-popup>
+
+<pl-sheet-popup [jobId]="jobId"></pl-sheet-popup>
+
+<confirm-popup #confirmCancelUpdate (onSubmit)="onCancelUpdateJob()"
+    [body]="'Unsaved data will be lost. Are you sure want to leave?'" [labelConfirm]="'Yes'"></confirm-popup>
+
+<confirm-popup *ngIf="!!opsTransaction" #confirmDelete (onSubmit)="onDeleteJob()" [body]="deleteMessage">
+</confirm-popup>
+
+<info-popup #notAllowDelete [body]="'You are not allow to delete this job'"></info-popup>
+
+<confirm-popup #confirmLockShipment (onSubmit)="onLockShipment()" [body]="'Do you want to lock this shipment ?'"
+    [labelConfirm]="'Yes'"></confirm-popup>
+
+<ng-template #placeholder>
+    <div class="no-data">
+        <i class="flaticon-coins"></i>
+        <span class="no-data-text">No records found</span>
+    </div>
+</ng-template>
+<info-popup #notAllowUpdate [body]="invalidFormText" [title]="'Cannot Create Job'"></info-popup>

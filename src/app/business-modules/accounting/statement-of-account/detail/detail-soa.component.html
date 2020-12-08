@@ -1,0 +1,224 @@
+<app-sub-header>
+    <div class="c-button-actions">
+        <button type="button" class="btn btn-success m-btn--square m-btn--icon m-btn--uppercase"
+            [routerLink]="'/home/accounting/statement-of-account/edit'"
+            [queryParams]="{ no: soa.soano, currency: 'VND' }">
+            <span>
+                <i class="la la-edit"></i>
+                <span>
+                    Edit
+                </span>
+            </span>
+        </button>
+        <!-- <button type="button" class="btn btn-danger m-btn--square m-btn--icon m-btn--uppercase"
+            (click)="exportExcelSOA()">
+            <span>
+                <i class="la la-upload"></i>
+                <span>
+                    export
+                </span>
+            </span>
+        </button>
+        <button type="button" class="btn btn-danger m-btn--square m-btn--icon m-btn--uppercase" (click)="export()">
+            <span>
+                <i class="la la-upload"></i>
+                <span>
+                    export bravo
+                </span>
+            </span>
+        </button> -->
+        <div class="btn-group" [autoClose]="!isClickSubMenu" dropdown container="body">
+            <button id="button-nested" dropdownToggle type="button" class="btn btn-danger dropdown-toggle"
+                aria-controls="dropdown-nested">
+                <i class="la la-upload"></i>Export<span class="caret"></span>
+            </button>
+            <ul id="dropdown-nested" *dropdownMenu class="dropdown-menu" role="menu" aria-labelledby="button-nested">
+                <li role="menuitem"><a class="dropdown-item pointer" (click)="exportSOAAF()">SOA For Air</a></li>
+                <li role="menuitem"><a class="dropdown-item pointer" (click)="exportSOAOPS()">SOA OPS</a></li>
+                <li role="menuitem"><a class="dropdown-item pointer" (click)="export()">For Import Bravo</a></li>
+                <li role="menuitem"><a class="dropdown-item pointer" (click)="exportExcelSOA()">Standard</a></li>
+            </ul>
+        </div>
+
+
+
+    </div>
+</app-sub-header>
+
+<div class="m-content">
+    <div class="m-portlet">
+        <div class="m-form m-form--state">
+            <div class="m-portlet__body">
+                <div class="row">
+                    <div class="col-lg-4 m--margin-bottom-10">
+                        <span class="m--font-bolder">SOA no:</span>
+                        <span class="m--font-brand m--margin-left-5">{{soa.soano}}</span>
+                    </div>
+                    <div class="col-lg-4  m--margin-bottom-10">
+                        <span class="m--font-bolder">From Date:</span>
+                        <span class="m--font-brand m--margin-left-5">{{soa.soaformDate | date: 'dd/MM/yyyy'}}</span>
+                    </div>
+                    <div class="col-lg-4 m--margin-bottom-10">
+                        <span class="m--font-bolder">To Date:</span>
+                        <span class="m--font-brand m--margin-left-5">{{soa.soatoDate | date: 'dd/MM/yyyy'}}</span>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-lg-4 m--margin-bottom-10">
+                        <span class="m--font-bolder">Partner Name:</span>
+                        <span class="m--margin-left-5"
+                            [ngClass]="soa.status === 'Done' ? 'm--font-success' : 'm--font-danger'">{{soa.partnerName}}</span>
+                    </div>
+                    <div class="col-lg-4 m--margin-bottom-10">
+                        <span class="m--font-bolder">Status:</span>
+                        <span class="m--font-danger m--margin-left-5">{{soa.status}}</span>
+                    </div>
+                    <div class="col-lg-4 m--margin-bottom-10">
+                        <span class="m--font-bolder">Currency:</span>
+                        <span class="m--font-brand m--margin-left-5">{{soa.currency}}</span>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-lg-4  m--margin-bottom-10">
+                        <span class="m--font-bolder">Total Amount:</span>
+                        <span class="m--font-brand m--margin-left-5"
+                            *ngIf="soa.totalAmount > 0 else negativeNumber">{{soa.totalAmount | number: '.0-3'}}</span>
+                        <ng-template #negativeNumber class="m--font-brand m--margin-left-5">
+                            <span class="m--font-brand m--margin-left-5">
+                                ({{soa.totalAmount | abs | number: '.0-3'}})
+                            </span>
+                        </ng-template>
+                    </div>
+                    <div class="col-lg-4  m--margin-bottom-10">
+                        <span class="m--font-bolder">Total Shipment:</span>
+                        <span class="m--font-brand m--margin-left-5">{{soa.shipment | number: '.0-2'}}</span>
+                    </div>
+                    <div class="col-lg-4  m--margin-bottom-10">
+                        <span class="m--font-bolder">Create Date:</span>
+                        <span
+                            class="m--font-brand m--margin-left-5">{{soa.datetimeCreated | date: 'dd/MM/yyyy h:mm a'}}</span>
+                        <span class="m--font-bolder m--margin-left-5">by</span>
+                        <span class="m--font-brand m--margin-left-5">{{soa.userNameCreated}}</span>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-lg-4 m--margin-bottom-10">
+                        <span class="m--font-bolder">Modified Date:</span>
+                        <span
+                            class="m--font-brand m--margin-left-5">{{soa.datetimeModified | date: 'dd/MM/yyyy h:mm a'}}</span>
+                        <span class="m--font-bolder m--margin-left-5">by</span>
+                        <span class="m--font-brand m--margin-left-5">{{soa.userNameModified}}</span>
+                    </div>
+                    <div class="col-lg-4  m--margin-bottom-10">
+                        <span class="m--font-bolder">Note:</span>
+                        <span class="m--font-brand m--margin-left-5">{{soa.note}}</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="m-portlet">
+        <div class="m-portlet__body">
+            <div class="m-form m--margin-bottom-10">
+                <div class="row">
+                    <div class="col-lg-6">
+                        <div class="m-input-icon m-input-icon--right">
+                            <input type="text" class="form-control m-input m-input--square" placeholder="Search"
+                                [(ngModel)]="keyword" name="keyword">
+                            <span class="m-input-icon__icon m-input-icon__icon--right">
+                                <span>
+                                    <i class="la la-search"></i>
+                                </span>
+                            </span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="table-wrapper">
+                <table class="table table-striped table-brand dataTable">
+                    <thead>
+                        <tr>
+                            <th *ngFor="let header of headers; let i = index; trackBy: trackByFn"
+                                [class]="sortClass(header.sortable ? header.field : '')"
+                                (click)="sortBy(header.sortable ? header.field : '')">
+                                <span>{{header.title}}</span>
+                                <span class="sort-indicator"></span>
+                            </th>
+                        </tr>
+                    </thead>
+                    <tbody class="tbody-group">
+                        <tr *ngIf="!isLoading && !soa.chargeShipments.length">
+                            <td colspan="100">
+                                <div class="no-data">
+                                    <i class="flaticon-coins"></i>
+                                    <span class="no-data-text">No records found</span>
+                                </div>
+                            </td>
+                        </tr>
+                        <tr
+                            *ngFor="let charge of soa.chargeShipments | filter: keyword: ['chargeCode', 'hbl', 'currency' , 'mbl' , 'jobId' , 'chargeName'] ; let i = index; trackBy: trackByFn">
+                            <td>
+                                <span>{{charge.chargeCode}}</span>
+                            </td>
+                            <td>
+                                <span>{{charge.chargeName}}</span>
+                            </td>
+                            <td>
+                                <span>{{charge.jobId}}</span>
+                            </td>
+                            <td>
+                                <span>{{charge.hbl}}</span>
+                            </td>
+                            <td>
+                                <span>{{charge.mbl}}</span>
+                            </td>
+                            <td>
+                                <span>{{charge.customNo}}</span>
+                            </td>
+                            <td>
+                                <span>{{charge.debit | number: '.0-3'}}</span>
+                            </td>
+                            <td>
+                                <span>{{charge.credit | number: '.0-3'}}</span>
+                            </td>
+                            <td>
+                                <span>{{charge.currency}}</span>
+                            </td>
+                            <td>
+                                <span>{{charge.invoiceNo}}</span>
+                            </td>
+                            <td>
+                                <span>{{!!charge.serviceDate ? (charge.serviceDate | date: 'dd/MM/yyyy') : ''}}</span>
+                            </td>
+                            <td>
+                                <span>{{charge.note}}</span>
+                            </td>
+                        </tr>
+                        <tr class="loading-wrapper" *ngIf="isLoading">
+                            <td colspan="100">
+                                <div class="on-loading">
+                                    <div class="m-loader m-loader--brand">
+                                    </div><span>Loading</span>
+                                </div>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+
+    <soa-summary [data]="soa"></soa-summary>
+
+    <div class="form-actions m--align-center">
+        <button type="button" class="btn btn-cancel m-btn--square m-btn--icon m-btn--uppercase" (click)="back()">
+            <span>
+                <i class="la la-ban"></i>
+                <span>
+                    cancel
+                </span>
+            </span>
+        </button>
+    </div>
+</div>

@@ -1,0 +1,173 @@
+<!--begin:: subheader-->
+<div class="m-subheader">
+    <div class="d-flex align-items-center">
+        <div class="mr-auto">
+            <app-breadcrumb></app-breadcrumb>
+        </div>
+    </div>
+</div>
+<!--end:: subheader-->
+<!--begin::m-content-->
+<div class="m-content">
+    <!--begin:: m-portlet-->
+    <div class="m-portlet">
+        <div class="m-portlet__body">
+            <!--begin::Form-->
+            <div class="m-form">
+                <div class="row">
+                    <div class="col-lg-4">
+                        <div class="form-group">
+                            <label class="form-control-label" for="">
+                                Select single with search
+                            </label>
+                            <ng-select #categorySelect [allowClear]="true" [items]="categories" [disabled]="disabled" (data)="refreshValue($event)"
+                                (selected)="selected($event)" (removed)="removed($event)" (typed)="typed($event)"
+                                placeholder="Select filter">
+                            </ng-select>
+                        </div>
+                    </div>
+                    <div class="col-lg-4">
+                        <div class="form-group">
+                            <label class="form-control-label" for="">
+                                Daterange picker
+                            </label>
+                            <div class="m-input-icon m-input-icon--right down daterange-rtl">
+                                <input type="text" class="form-control m-input m-input--square"
+                                    ngxDaterangepickerMd
+                                    [(ngModel)]="selectedRange"
+                                    [ranges]="ranges"
+                                    [maxDate]="maxDate"
+                                    [alwaysShowCalendars]="true"
+                                    name="daterange" 
+                                    [locale]="{applyLabel: 'ok', format: 'DD/MM/YYYY'}"
+                                    placeholder="From date - to date" readonly/>
+                                <span class="m-input-icon__icon m-input-icon__icon--right">
+                                    <span>
+                                        <i class="la la-calendar"></i>
+                                    </span>
+                                </span>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-lg-4">
+                        <div class="form-group">
+                            <label class="form-control-label" for="">
+                                Name/Code
+                            </label>
+                            <input type="text" class="form-control m-input m-input--square" placeholder="" aria-autocomplete="nope"
+                                [(ngModel)]="criteria.query" (change)="criteria.query=criteria.query.trim()">
+                        </div>
+                    </div>
+                </div>
+                <div class="form-actions m--align-right">
+                    <button type="button" class="btn btn-brand m-btn--square m-btn--icon m-btn--uppercase" (click)="search()">
+                        <span>
+                            <i class="la la-search"></i>
+                            <span>
+                                Search
+                            </span>
+                        </span>
+                    </button>
+                    <button type="button" class="btn btn-default m-btn--square m-btn--icon m-btn--uppercase" (click)="resetSearch()">
+                        <span>
+                            <i class="la la-refresh"></i>
+                            <span>
+                                Reset
+                            </span>
+                        </span>
+                    </button>
+                </div>
+            </div>
+            <!--end::Form-->
+        </div>
+    </div>
+    <!--end::m-portlet-->
+    <!--begin:: m-portlet-->
+    <div class="m-portlet">
+        <div class="m-portlet__body">
+            <!--begin: Datatable -->
+            <div class="table-wrapper" id="">
+                <table class="table table-striped table-brand dataTable">
+                    <thead>
+                        <tr>
+                            <th class="sorting_asc">
+                                <span>No</span>
+                            </th>
+                            <th class="sorting" [ngClass]="{ 'sorting_asc ': (isDesc && sortKey == 'name'), 'sorting_desc': (!isDesc && sortKey == 'name') }"
+                                (click)="sort('name')">
+                                <span>Name/Code</span>
+                            </th>
+                            <th class="sorting" [ngClass]="{ 'sorting_asc ': (isDesc && sortKey == 'action'), 'sorting_desc': (!isDesc && sortKey == 'action') }"
+                                (click)="sort('action')">
+                                <span>Action</span>
+                            </th>
+                            <th class="sorting" [ngClass]="{ 'sorting_asc ': (isDesc && sortKey == 'userUpdated'), 'sorting_desc': (!isDesc && sortKey == 'userUpdated') }"
+                                (click)="sort('userUpdated')">
+                                <span>User Update</span>
+                            </th>
+                            <th class="sorting" [ngClass]="{ 'sorting_asc ': (isDesc && sortKey == 'datetimeUpdated'), 'sorting_desc': (!isDesc && sortKey == 'datetimeUpdated') }"
+                                (click)="sort('datetimeUpdated')">
+                                <span>Update Time</span>
+                            </th>
+                            <th>
+                                <span>Log Content</span>
+                            </th>
+                        </tr>
+                    </thead>
+                    <tbody *ngIf="logs">
+                        <tr *ngFor="let log of logs;let i = index;">
+                            <td>
+                                <span>{{ (i + this.pager.startIndex + 1) }}</span>
+                            </td>
+                            <td>
+                                <span *ngIf="log.code == null">{{ log.name }}</span>
+                                <span *ngIf="log.name == null">{{ log.code }}</span>
+                                <span *ngIf="log.code && log.name">{{ log.code }} / {{ log.name }}</span>
+                            </td>
+                            <td>
+                                <span>{{ log.action }}</span>
+                            </td>
+                            <td>
+                                <span>{{ log.userUpdated }}</span>
+                            </td>
+                            <td>
+                                <span>{{ log.datetimeUpdated | date: 'dd/MM/yyyy' }}</span>&nbsp;
+                                <span>{{ log.datetimeUpdated | date: 'hh:mm:ss' }}</span>
+                            </td>
+                            <td>
+                                <span>{{ log.action }}</span>
+                                <span *ngIf="log.propertyChange == null && log.action=='Update'">: nochange </span>
+                                <span *ngIf="log.propertyChange"> {{ log.propertyChange.propertyName }} : {{ log.propertyChange.newValue }} </span>
+                            </td>
+                        </tr>
+                        <!-- <tr>
+                            <td>
+                                <span>1</span>
+                            </td>
+                            <td>
+                                <span>12345678945</span>
+                            </td>
+                            <td>
+                                <span>Update</span>
+                            </td>
+                            <td>
+                                <span>Alex Phương</span>
+                            </td>
+                            <td>
+                                <span>dd/mm/yyyy</span>&nbsp;
+                                <span>hh:mm:ss</span>
+                            </td>
+                            <td>
+                                <span>Update Currency list</span>
+                            </td>
+                        </tr> -->
+                    </tbody>
+                </table>
+                <app-pagination *ngIf="pager.totalItems>0" [config]="pager" (pagerObject)="setPage($event)"></app-pagination>
+            </div>
+            <!--end: Datatable -->
+        </div>
+    </div>
+    <!--end:: m-portlet-->
+</div>
+<!--end::m-content-->

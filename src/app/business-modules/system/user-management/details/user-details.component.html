@@ -1,0 +1,28 @@
+<div class="user-detail-page">
+    <app-sub-header> </app-sub-header>
+    <app-form-add-user>
+        <div class="row m--padding-top-10">
+            <div class="col-6">
+                <h3 class="c-block-title m--margin-left-10">General Information</h3>
+            </div>
+            <div class="col-6">
+                <div class="m--align-right">
+
+                    <app-default-button class="m--margin-right-10" [buttonSetting]="saveButtonSetting"
+                        (onClick)="updateUser()">
+                    </app-default-button>
+                    <button routerLink="/home/system/user-management" type="button"
+                        class="btn btn-default m-btn--square m-btn--icon m-btn--uppercase m--margin-right-10">
+                        <span>
+                            <i class="la la-ban"></i>
+                            <span> Cancel </span>
+                        </span>
+                    </button>
+
+                </div>
+            </div>
+
+        </div>
+        <hr />
+    </app-form-add-user>
+</div>

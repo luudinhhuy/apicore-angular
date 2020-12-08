@@ -1,0 +1,112 @@
+<!--begin:: subheader-->
+<div class="m-subheader">
+    <div class="d-flex align-items-center">
+        <div class="mr-auto">
+            <app-breadcrumb></app-breadcrumb>
+        </div>
+        <div class="c-button-actions">
+            <app-permission-button title="add new" (onClick)=addPartner()></app-permission-button>
+            <app-permission-button title="Import" [routerLink]="['/home/catalogue/partner-data/import']" type="import">
+            </app-permission-button>
+            <app-permission-button title="Export" (onClick)="export()" type="export"></app-permission-button>
+        </div>
+    </div>
+</div>
+<!--end:: subheader-->
+<!--begin::m-content of Partner-data-->
+<div class="m-content">
+    <!--begin:: m-portlet of search-form-->
+    <div class="m-portlet">
+        <div class="m-portlet__body">
+            <!--begin::Form-->
+            <div class="m-form">
+                <app-search-options [configSearch]="configSearch" (search)="onSearch($event)"
+                    (reset_search)="resetSearch($event)"></app-search-options>
+            </div>
+            <!--end::Form-->
+        </div>
+    </div>
+    <!--end::m-portlet of search-form-->
+
+    <div class="row">
+        <div class="col-12">
+            <ul class="nav nav-tabs m-tabs m-tabs-line m-tabs-line--brand m-tabs-line-danger" role="tablist">
+                <li class="nav-item m-tabs__item">
+                    <a class="nav-link m-tabs__link active" data-toggle="tab" href="#all-tabview-data" role="tab"
+                        (click)="tabSelect(tabName.allTab)">
+                        All
+                    </a>
+                </li>
+                <li class="nav-item m-tabs__item">
+                    <a class="nav-link m-tabs__link" data-toggle="tab" href="#customer-tabview-tab" role="tab"
+                        (click)="tabSelect(tabName.customerTab)">
+                        Customer
+                    </a>
+                </li>
+                <li class="nav-item m-tabs__item">
+                    <a class="nav-link m-tabs__link" data-toggle="tab" href="#agent-tabview-tab" role="tab"
+                        (click)="tabSelect(tabName.agentTab)">
+                        Agent
+                    </a>
+                </li>
+                <li class="nav-item m-tabs__item">
+                    <a class="nav-link m-tabs__link" data-toggle="tab" href="#carrier-tabview-data" role="tab"
+                        (click)="tabSelect(tabName.carrierTab)">
+                        Carrier
+                    </a>
+                </li>
+                <li class="nav-item m-tabs__item">
+                    <a class="nav-link m-tabs__link" data-toggle="tab" href="#consignee-tabview-data" role="tab"
+                        (click)="tabSelect(tabName.consigneeTab)">
+                        Consignee
+                    </a>
+                </li>
+                <li class="nav-item m-tabs__item">
+                    <a class="nav-link m-tabs__link" data-toggle="tab" href="#shipper-tabview-data" role="tab"
+                        (click)="tabSelect(tabName.shipperTab)">
+                        Shipper
+                    </a>
+                </li>
+            </ul>
+        </div>
+    </div>
+    <!--begin:: m-portlet of partnerDataTabContent-->
+    <div class="m-portlet">
+        <div class="m-portlet__body">
+            <div class="tab-content" id="partnerDataTabContent">
+
+                <div class="tab-pane fade show active" id="all-tabview-data" role="tabpanel" aria-labelledby="">
+                    <app-partner-list [criteria]="criteria" *ngIf="activeTab === 'allTab' && activeTab != null"
+                        (deleteConfirm)="showConfirmDelete($event)" (detail)="showDetail($event)"> </app-partner-list>
+                </div>
+                <div class="tab-pane fade" role="tabpanel" id="customer-tabview-tab">
+                    <app-partner-list [criteria]="criteria" *ngIf="activeTab === 'customerTab' && activeTab != null"
+                        (deleteConfirm)="showConfirmDelete($event)" (detail)="showDetail($event)"></app-partner-list>
+                </div>
+                <div class="tab-pane fade" id="agent-tabview-tab" role="tabpanel" aria-labelledby="">
+                    <app-partner-list [criteria]="criteria" *ngIf="activeTab === 'agentTab'"
+                        (deleteConfirm)="showConfirmDelete($event)" (detail)="showDetail($event)"></app-partner-list>
+                </div>
+
+                <div class="tab-pane fade" id="carrier-tabview-data" role="tabpanel" aria-labelledby="">
+                    <app-partner-list [criteria]="criteria" *ngIf="activeTab === 'carrierTab'"
+                        (deleteConfirm)="showConfirmDelete($event)" (detail)="showDetail($event)"></app-partner-list>
+                </div>
+
+                <div class="tab-pane fade" id="consignee-tabview-data" role="tabpanel" aria-labelledby="">
+                    <app-partner-list [criteria]="criteria" *ngIf="activeTab === 'consigneeTab'"
+                        (deleteConfirm)="showConfirmDelete($event)" (detail)="showDetail($event)"></app-partner-list>
+                </div>
+
+                <div class="tab-pane fade" id="shipper-tabview-data" role="tabpanel" aria-labelledby="">
+                    <app-partner-list [criteria]="criteria" *ngIf="activeTab === 'shipperTab'"
+                        (deleteConfirm)="showConfirmDelete($event)" (detail)="showDetail($event)"></app-partner-list>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!--end:: m-portlet of partnerDataTabContent-->
+</div>
+
+<confirm-popup body="You want to delete this partner" (onSubmit)="onDelete()"></confirm-popup>
+<permission-403-popup></permission-403-popup>

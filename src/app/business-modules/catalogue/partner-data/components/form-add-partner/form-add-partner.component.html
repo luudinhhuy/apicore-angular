@@ -1,0 +1,482 @@
+<form class="m-form m-form--state" [formGroup]="partnerForm">
+    <!--begin::m-portlet -->
+    <div class="m-portlet m-portlet--danger m-portlet--head-solid-bg m-portlet--bordered">
+        <div class="alert-block__heading">
+            <h3 class="alert-block__title">General Information</h3>
+        </div>
+        <div class="m-portlet__body">
+            <div class="row">
+                <div class="col-lg-4">
+                    <div class="form-group"
+                        [ngClass]="{ 'm-form__group has-danger': isSubmitted && partnerAccountNo.invalid }">
+                        <label class="form-control-label" for="">
+                            Partner ID <span class="m--font-danger"></span>
+                        </label>
+                        <input type="text" class="form-control m-input m-input--square" placeholder=""
+                            name="partnerAccountNo" autocomplete="nope" minlength="3" maxlength="20"
+                            formControlName="partnerAccountNo" specialIsAlphaNumeric
+                            [ngClass]="{ 'm-input--square': isSubmitted && partnerAccountNo.invalid }" required>
+                        <div class="form-control-feedback" *ngIf="isSubmitted && partnerAccountNo.invalid">
+                            Partner ID required least 3 characters
+                        </div>
+                    </div>
+                </div>
+                <div class="col-lg-4">
+                    <div class="form-group"
+                        [ngClass]="{ 'm-form__group has-danger': isSubmitted && nameENFull.invalid }">
+                        <label class="form-control-label" for="">
+                            Partner Name EN Full <span class="m--font-danger">(*)</span>
+                        </label>
+                        <input type="text" class="form-control m-input m-input--square" formControlName="nameENFull"
+                            autofocus placeholder="Please enter Name EN Full" name="nameENFull" autocomplete="nope"
+                            minlength="3" maxlength="100"
+                            [ngClass]="{ 'm-input--square': isSubmitted && nameENFull.invalid }" required>
+                        <div class="form-control-feedback" *ngIf="isSubmitted && nameENFull.invalid">
+                            Partner Name EN Full is required
+                        </div>
+                    </div>
+                </div>
+                <div class="col-lg-4">
+                    <div class="form-group"
+                        [ngClass]="{ 'm-form__group has-danger': isSubmitted && nameLocalFull.invalid }">
+                        <label class="form-control-label" for="">
+                            Partner Name Local Full <span class="m--font-danger">(*)</span>
+                        </label>
+                        <input type="text" class="form-control m-input m-input--square" formControlName="nameLocalFull"
+                            placeholder="Please enter Name Local" name="nameLocalFull" autocomplete="nope" minlength="3"
+                            maxlength="100" [ngClass]="{ 'm-input--square': isSubmitted && nameLocalFull.invalid }"
+                            required>
+                        <div class="form-control-feedback" *ngIf="isSubmitted && nameLocalFull.invalid">
+                            Partner Name Local Full is required
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-lg-4">
+                    <div class="form-group"
+                        [ngClass]="{ 'm-form__group has-danger': isSubmitted && shortName.invalid }">
+                        <label class="form-control-label" for="">
+                            Partner Name Abbreviation <span class="m--font-danger">(*)</span>
+                        </label>
+                        <input type="text" class="form-control m-input m-input--square" formControlName="shortName"
+                            placeholder="please enter Name Abbreviation" name="shortName" autocomplete="nope"
+                            [ngClass]="{ 'm-input--square': isSubmitted && shortName.invalid }" required>
+                        <div class="form-control-feedback" *ngIf="isSubmitted && shortName.invalid">
+                            Partner Name Abbreviation is required
+                        </div>
+                    </div>
+                    <!-- <div class="form-group">
+                        <label class="form-control-label" for="">
+                            A/C Ref
+                        </label>
+                        <ng-select [allowClear]="true" [items]="parentCustomers" name="partnerAccountRef"
+                            placeholder="Select A/C Ref" formControlName="partnerAccountRef">
+                        </ng-select>
+                    </div> -->
+                    <div class="form-group">
+                        <label class="form-control-label" for="">
+                            A/C Ref
+                        </label>
+                        <app-combo-grid-virtual-scroll (itemSelected)="onSelectDataFormInfo($event)"
+                        [currentActiveItemId]="{ field: 'id', value: partnerAccountRef.value}"
+                        [selectedDisplayFields]="['partnerNameVn']" [dataSources]="parentCustomers"
+                        [displayFields]="[{field: 'partnerNameVn', label: 'Name'}]"
+                        (remove)="resetFormControl(partnerAccountRef)"  placeholder="Select A/C Ref" >
+                    </app-combo-grid-virtual-scroll>
+                    </div>
+
+                </div>
+                <div class="col-lg-4">
+                    <div class="form-group" [ngClass]="{ 'm-form__group has-danger': isSubmitted && taxCode.invalid }">
+                        <label class="form-control-label" for="">
+                            Tax Code <span class="m--font-danger">(*)</span>
+                        </label>
+                        <input type="text" min="0" class="form-control m-input m-input--square"
+                            title="Tax code must be number" placeholder="Please enter Tax Code" autocomplete="nope"
+                            formControlName="taxCode" minlength="3" maxlength="100" ecusSpecicalCharacterNoSpace
+                            [ngClass]="{ 'm-input--square': isSubmitted && taxCode.invalid }" required>
+                        <div class="form-control-feedback" *ngIf="isSubmitted && taxCode.invalid">
+                            Partner Tax Code is required and must be number
+                        </div>
+                    </div>
+                    <div class="form-group"
+                        [ngClass]="{ 'm-form__group has-danger': isSubmitted && partnerGroup.invalid }">
+                        <label class="form-control-label" for="">
+                            Category <span class="m--font-danger">(*)</span>
+                        </label>
+                        <ng-select [multiple]="true" [items]="partnerGroups" placeholder="Select partner group"
+                            formControlName="partnerGroup" (selected)="onChange($event, 'category')"
+                            (removed)="removed($event, 'category')">
+                        </ng-select>
+                        <div class="form-control-feedback" *ngIf="isSubmitted && partnerGroup.invalid">
+                            Category is required
+                        </div>
+                    </div>
+                </div>
+
+                <div class="col-lg-4">
+                    <div class="form-group" [ngClass]="{ 'm-form__group has-danger': isSubmitted && isExistedTaxcode }">
+                        <label class="form-control-label" for="">
+                            Internal Reference No
+                        </label>
+                        <input type="text" name="internalReferenceNo" class="form-control" minlength="3"
+                            formControlName="internalReferenceNo" />
+                        <div class="form-control-feedback" *ngIf="isSubmitted  && internalReferenceNo.invalid ">
+                            Internal Reference No required least 3 characters
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label class="form-control-label" for="">
+                            Airline Code/Co-Loader Code
+                        </label>
+                        <input type="text" name="coLoaderCode" class="form-control" formControlName="coLoaderCode" />
+                        <div class="text-center text-underline m--margin-top-10" *ngIf="isUpdate">
+                            <a (click)="showOtherCharge()" class="pointer font-weight-bold">Other Charge</a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!--end::m-portlet -->
+
+    <!--begin::m-portlet -->
+    <div class="m-portlet m-portlet--danger m-portlet--head-solid-bg m-portlet--bordered">
+        <div class="alert-block__heading">
+            <h3 class="alert-block__title">Detail Information</h3>
+        </div>
+        <div class="m-portlet__body">
+
+            <div class="div-inside bg-secondary">
+                <h3 class="c-block-title">Shipping Address</h3>
+                <hr>
+                <div class="row">
+                    <div class="col-lg-6">
+                        <div class="row">
+                            <div class="col-lg-6">
+                                <div class="form-group"
+                                    [ngClass]="{ 'm-form__group has-danger': isSubmitted && shippingCountry.invalid }">
+                                    <label class="form-control-label">
+                                        Country <span class="m--font-danger">(*)</span>
+                                    </label>
+                                    <ng-select #chooseShippingCountry [allowClear]="true" [items]="countries"
+                                        formControlName="shippingCountry"
+                                        (selected)="onChange($event, 'shippingCountry')"
+                                        (removed)="removed($event, 'shippingCountry')" placeholder="Select country">
+                                    </ng-select>
+                                    <div class="form-control-feedback" *ngIf="isSubmitted && shippingCountry.invalid">
+                                        Country is required
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-lg-6">
+                                <div class="form-group"
+                                    [ngClass]="{ 'm-form__group has-danger': isSubmitted && shippingProvince.invalid }">
+                                    <label class="form-control-label">
+                                        City <span class="m--font-danger">(*)</span>
+                                    </label>
+                                    <ng-select [allowClear]="true" [items]="shippingProvinces"
+                                        formControlName="shippingProvince" placeholder="Select province/ city">
+                                    </ng-select>
+                                    <div class="form-control-feedback" *ngIf="isSubmitted && shippingProvince.invalid">
+                                        City is required
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-lg-12">
+                                <div class="form-group">
+                                    <label class="form-control-label">
+                                        Zipcode
+                                    </label>
+                                    <input type="text" class="form-control m-input m-input--square" placeholder=""
+                                        autocomplete="nope" name="zipCodeShipping" formControlName="zipCodeShipping">
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-lg-3">
+                        <div class="form-group"
+                            [ngClass]="{ 'm-form__group has-danger': isSubmitted && shippingAddressEN.invalid }">
+                            <label class="form-control-label">
+                                Address EN <span class="m--font-danger">(*)</span>
+                            </label>
+                            <textarea class="form-control m-input m-input--square" id="" rows="6" autocomplete="nope"
+                                name="shippingAddressEN" formControlName="shippingAddressEN"></textarea>
+                            <div class="form-control-feedback" *ngIf="isSubmitted && shippingAddressEN.invalid">
+                                Address EN is required
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-lg-3">
+                        <div class="form-group"
+                            [ngClass]="{ 'm-form__group has-danger': isSubmitted && shippingAddressVN.invalid }">
+                            <label class="form-control-label">
+                                Address Local <span class="m--font-danger">(*)</span>
+                            </label>
+                            <textarea class="form-control m-input m-input--square" id="" rows="6" autocomplete="nope"
+                                formControlName="shippingAddressVN" name="shippingAddressVN" required></textarea>
+                            <div class="form-control-feedback" *ngIf="isSubmitted && shippingAddressVN.invalid">
+                                Address Local is required
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="div-inside bg-secondary m--margin-bottom-15">
+                <div class="d-flex align-items-center">
+                    <h3 class="c-block-title">Billing Address</h3>
+                    <button type="button" (click)="copyShippingAddress()"
+                        class="btn btn-brand m-btn--square m-btn--icon m-btn--uppercase m--margin-left-20">
+                        <span>
+                            <i class="la la-download"></i>
+                            <span>
+                                Copy Shipping Address
+                            </span>
+                        </span>
+                    </button>
+                </div>
+                <hr>
+                <div class="row">
+                    <div class="col-lg-6">
+                        <div class="row">
+                            <div class="col-lg-6">
+                                <div class="form-group"
+                                    [ngClass]="{ 'm-form__group has-danger': isSubmitted && billingCountry.invalid }">
+                                    <label class="form-control-label">
+                                        Country <span class="m--font-danger">(*)</span>
+                                    </label>
+                                    <ng-select [allowClear]="true" [items]="countries" formControlName="billingCountry"
+                                        (selected)="onChange($event, 'billingCountry')"
+                                        (removed)="removed($event, 'billingCountry')" placeholder="Select country">
+                                    </ng-select>
+                                    <div class="form-control-feedback" *ngIf="isSubmitted && billingCountry.invalid">
+                                        Country is required
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-lg-6">
+                                <div class="form-group"
+                                    [ngClass]="{ 'm-form__group has-danger': isSubmitted && billingProvince.invalid }">
+                                    <label class="form-control-label">
+                                        City <span class="m--font-danger">(*)</span>
+                                    </label>
+                                    <ng-select [allowClear]="true" [items]="billingProvinces"
+                                        formControlName="billingProvince" placeholder="Select city/ province">
+                                    </ng-select>
+                                    <div class="form-control-feedback" *ngIf="isSubmitted && billingProvince.invalid">
+                                        City is required
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-lg-12">
+                                <div class="form-group">
+                                    <label class="form-control-label">
+                                        Zipcode
+                                    </label>
+                                    <input type="text" class="form-control m-input m-input--square" placeholder=""
+                                        maxlength="20" autocomplete="nope" name="billingZipcode"
+                                        formControlName="billingZipcode">
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-lg-3">
+                        <div class="form-group"
+                            [ngClass]="{ 'm-form__group has-danger': isSubmitted && billingAddressEN.invalid }">
+                            <label class="form-control-label">
+                                Address EN <span class="m--font-danger">(*)</span>
+                            </label>
+                            <textarea class="form-control m-input m-input--square" id="" rows="6" maxlength="300"
+                                autocomplete="nope" name="billingAddressEN" formControlName="billingAddressEN"
+                                required></textarea>
+                            <div class="form-control-feedback" *ngIf="isSubmitted && billingAddressEN.invalid">
+                                Address EN is required
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-lg-3">
+                        <div class="form-group"
+                            [ngClass]="{ 'm-form__group has-danger': isSubmitted && billingAddressLocal.invalid }">
+                            <label class="form-control-label">
+                                Address Local <span class="m--font-danger">(*)</span>
+                            </label>
+                            <textarea class="form-control m-input m-input--square" id="" rows="6" maxlength="300"
+                                autocomplete="nope" name="billingAddressLocal" formControlName="billingAddressLocal"
+                                required></textarea>
+                            <div class="form-control-feedback" *ngIf="isSubmitted && billingAddressLocal.invalid">
+                                Address Local is required
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-lg-4">
+                    <div class="form-group">
+                        <label class="form-control-label" for="">
+                            Contact Person
+                        </label>
+                        <input type="text" class="form-control m-input m-input--square" placeholder=""
+                            formControlName="partnerContactPerson" name="partnerContactPerson" autocomplete="nope">
+                    </div>
+                </div>
+                <div class="col-lg-4">
+                    <div class="form-group">
+                        <label class="form-control-label" for="">
+                            Contact Phone Number
+                        </label>
+                        <input type="text" class="form-control m-input m-input--square" placeholder="" maxlength="50"
+                            formControlName="partnerContactNumber" name="partnerContactNumber" autocomplete="nope">
+                    </div>
+                </div>
+                <div class="col-lg-4">
+                    <div class="form-group">
+                        <label class="form-control-label" for="">
+                            Fax No
+                        </label>
+                        <input type="text" class="form-control m-input m-input--square" placeholder="" maxlength="50"
+                            formControlName="partnerContactFaxNo" name="partnerContactFaxNo" autocomplete="nope">
+                    </div>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-lg-4">
+                    <div class="form-group">
+                        <label class="form-control-label" for="">
+                            Work Phone (Ext No)
+                        </label>
+                        <input type="text" class="form-control m-input m-input--square" placeholder=""
+                            formControlName="employeeWorkPhone" name="employeeWorkPhone">
+                    </div>
+                </div>
+                <div class="col-lg-4">
+                    <div class="form-group">
+                        <label class="form-control-label" for="">
+                            Email Address
+                        </label>
+                        <input type="text" class="form-control m-input m-input--square" placeholder=""
+                            formControlName="employeeEmail" name="employeeEmail">
+                    </div>
+                </div>
+                <div class="col-lg-4">
+                    <div class="form-group">
+                        <label class="form-control-label" for="">
+                            Website
+                        </label>
+                        <input type="text" class="form-control m-input m-input--square" placeholder=""
+                            autocomplete="nope" name="partnerWebsite" formControlName="partnerWebsite">
+                    </div>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-lg-4">
+                    <div class="form-group">
+                        <label class="form-control-label" for="">
+                            Partners Bank Account
+                        </label>
+                        <input type="text" class="form-control m-input m-input--square" placeholder=""
+                            name="partnerbankAccountNo" autocomplete="nope" formControlName="partnerbankAccountNo">
+                    </div>
+                </div>
+                <div class="col-lg-4">
+                    <div class="form-group">
+                        <label class="form-control-label" for="">
+                            Bank Name
+                        </label>
+                        <input type="text" class="form-control m-input m-input--square" placeholder=""
+                            name="partnerBankAccountName" autocomplete="nope" formControlName="partnerBankAccountName">
+                    </div>
+                </div>
+                <div class="col-lg-4">
+                    <div class="form-group">
+                        <label class="form-control-label" for="">
+                            Bank Address
+                        </label>
+                        <input type="text" class="form-control m-input m-input--square" placeholder=""
+                            name="partnerBankAccountAddress" autocomplete="nope"
+                            formControlName="partnerBankAccountAddress">
+                    </div>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-lg-4">
+                    <div class="form-group">
+                        <label class="form-control-label" for="">
+                            Swift Code
+                        </label>
+                        <input type="text" class="form-control m-input m-input--square" placeholder=""
+                            name="partnerSwiftCode" formControlName="partnerSwiftCode">
+                    </div>
+                </div>
+                <div class="col-lg-4">
+                    <div class="form-group">
+                        <label class="form-control-label" for="">
+                            Profile
+                        </label>
+                        <ng-select [allowClear]="true" [items]="workPlaces" name="partnerWorkPlace"
+                            formControlName="partnerWorkPlace" placeholder="Select filter">
+                        </ng-select>
+                    </div>
+                </div>
+                <div class="col-lg-2">
+                    <div class="form-group">
+                        <label class="form-control-label"> Public </label>
+                        <div class="m-checkbox-inline">
+                            <app-switch [(toggle)]="isPublic" (toggleChange)="isPublic = $event">
+                            </app-switch>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-lg-2" *ngIf="isUpdate">
+                    <div class="form-group">
+                        <label class="form-control-label">Active</label>
+                        <div class="m-checkbox-inline">
+                            <app-switch [(toggle)]="active.value" (toggleChange)="active.setValue($event)">
+                            </app-switch>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+            <div class="row">
+                <div class="col-lg-4">
+                    <div class="form-group">
+                        <label class="form-control-label"> Round Up Method </label>
+                        <ng-select [allowClear]="true" [items]="roundMethods" name="roundUp" formControlName="roundUp"
+                            placeholder="Select roundup">
+                        </ng-select>
+                    </div>
+                </div>
+                <div class="col-lg-4">
+                    <div class="form-group">
+                        <label class="form-control-label"> Apply for Dim </label>
+                        <ng-select [allowClear]="true" [items]="applyDims" name="applyDim" formControlName="applyDim"
+                            placeholder="Select apply for dim">
+                        </ng-select>
+                    </div>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-lg-12">
+                    <div class="form-group">
+                        <label class="form-control-label" for="">
+                            Note
+                        </label>
+                        <textarea class="form-control m-input m-input--square" id="" name="partnerNote"
+                            formControlName="note" autocomplete="nope" rows="6"></textarea>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+    </div>
+    <!--end::m-portlet -->
+</form>
+
+<partner-other-charge-popup></partner-other-charge-popup>

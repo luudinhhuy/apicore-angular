@@ -1,0 +1,81 @@
+<div class="sea-fcl-create-hbl-page">
+    <app-sub-header>
+        <div class="c-button-actions">
+            <div class="btn-group" [autoClose]="!isClickSubMenu" dropdown container="body">
+                <button id="button-nested" dropdownToggle type="button" class="btn btn-success dropdown-toggle"
+                    aria-controls="dropdown-nested">
+                    <i class="la la-print"></i>Preview<span class="caret"></span>
+                </button>
+                <ul id="dropdown-nested" *dropdownMenu class="dropdown-menu" role="menu"
+                    aria-labelledby="button-nested">
+                    <li role="menuitem" dropdown triggers="mouseover" placement="right" container="body">
+                        <a dropdownToggle class="dropdown-item dropdown-toggle pointer"
+                            (click)="isClickSubMenu = true">Arrival Notice
+                            <span class="caret"></span>
+                        </a>
+                        <ul *dropdownMenu class="dropdown-menu dropdown-sub-menu" role="menu">
+                            <li role="menuitem"><a class="dropdown-item pointer"
+                                    (click)="onPreview('ARRIVAL_ORIGINAL')">Original Currency</a></li>
+                            <li role="menuitem"><a class="dropdown-item pointer"
+                                    (click)="onPreview('ARRIVAL_VND')">VND</a></li>
+                        </ul>
+                    </li>
+                    <li role="menuitem" dropdown triggers="mouseover" placement="right" container="body">
+                        <a dropdownToggle class="dropdown-item dropdown-toggle pointer"
+                            (click)="isClickSubMenu = true">Authorize Letter
+                            <span class="caret"></span>
+                        </a>
+                        <ul *dropdownMenu class="dropdown-menu dropdown-sub-menu" role="menu">
+                            <li role="menuitem"><a class="dropdown-item pointer"
+                                    (click)="onPreview('AUTHORIZE_LETTER1')">Authorize Letter( Form 1)</a></li>
+                            <li role="menuitem"><a class="dropdown-item pointer"
+                                    (click)="onPreview('AUTHORIZE_LETTER2')">Authorize Letter( Form 2)</a></li>
+                        </ul>
+                    </li>
+                    <li role="menuitem"><a class="dropdown-item pointer" (click)="onPreview('PROOF_OF_DELIVERY')">Proof
+                            of Delivery</a></li>
+                    <li role="menuitem"><a class="dropdown-item pointer"
+                            (click)="onPreview('DOCUMENT_RELEASE_FORM')">Document Release Form</a></li>
+                </ul>
+            </div>
+            <ng-container *ngIf="(isLocked | async) === false">
+                <app-default-button *ngIf="allowUpdate" [buttonSetting]="saveButtonSetting"
+                    (onClick)="confirmSave.show()">
+                </app-default-button>
+            </ng-container>
+            <app-default-button [buttonSetting]="cancelButtonSetting" (onClick)="gotoList()"></app-default-button>
+        </div>
+    </app-sub-header>
+</div>
+
+<div class="m-content">
+    <div class="m-portlet__body">
+        <tabset class="custom-class-tab">
+            <tab heading="HAWB Detail" (selectTab)="onSelectTab('DETAIL')">
+                <air-import-hbl-form-create [isUpdate]="true"> </air-import-hbl-form-create>
+            </tab>
+            <tab heading="Arrival Notice" (selectTab)="onSelectTab('ARRIVAL')" [active]="selectedTab === 'ARRIVAL'">
+                <ng-container *ngIf="selectedTab === 'ARRIVAL'">
+                    <arrival-note-air></arrival-note-air>
+                </ng-container>
+            </tab>
+            <tab heading="Authorize Letter" (selectTab)="onSelectTab('AUTHORIZE')">
+                <ng-container *ngIf="selectedTab === 'AUTHORIZE'">
+                    <hbl-delivery-order [isAir]="true"></hbl-delivery-order>
+                </ng-container>
+            </tab>
+        </tabset>
+    </div>
+</div>
+
+<confirm-popup #confirmSave body="You are about to update HBL. Are you sure all entered details are correct?"
+    (onSubmit)="onSaveHBLDetail()"></confirm-popup>
+
+<info-popup body="Opps, It looks like you missed something, Please recheck the highlighted field below.'"
+    [title]="'Cannot Update HB'"></info-popup>
+
+<confirm-popup #confirmSaveExistedHbl body="HAWB No has existed, do you want to continue saving?"
+    (onSubmit)="confirmUpdateData()" title="HAWB Existed"></confirm-popup>
+<ng-container *ngIf="dataReport">
+    <app-report-preview [data]="dataReport"></app-report-preview>
+</ng-container>

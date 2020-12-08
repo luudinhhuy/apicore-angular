@@ -1,0 +1,76 @@
+<div class="row list-progress-wp">
+    <div class="col-12">
+        <ul class="list-unstyled list-progress d-flex justify-content-around">
+            <li>
+                <div class="progress-content text-center">
+                    <div class="font-weight-bolder">Requester</div>
+                    <div class="icon-check">
+                        <i class="la la-check-circle-o" *ngIf="approveInfo.requesterName"></i>
+                    </div>
+                    <div class="font-weight-bold">{{approveInfo.requesterName}}</div>
+                    <div class="font-weight-bold">
+                        {{!!approveInfo.requesterAprDate ? (approveInfo.requesterAprDate | date: 'dd/MM/yyyy HH:mm') : '/.../'}}
+                    </div>
+                </div>
+            </li>
+            <li *ngIf="!!approveInfo.leader">
+                <div class="progress-content text-center">
+                    <div class="font-weight-bolder">Leader</div>
+                    <div class="icon-check">
+                        <i class="la la-check-circle-o" *ngIf="!!approveInfo.leaderAprDate"></i>
+                    </div>
+                    <div class="font-weight-bold">
+                        <ng-template>
+                            {{approveInfo.leaderName}}
+                        </ng-template>
+                    </div>
+                    <div class="font-weight-bold">Date:
+                        {{!!approveInfo.leaderAprDate ? (approveInfo.leaderAprDate | date: 'dd/MM/yyyy HH:mm') : '/.../'}}
+                    </div>
+                </div>
+            </li>
+            <li>
+                <div class="progress-content text-center">
+                    <div class="font-weight-bolder">Manager</div>
+                    <div class="icon-check">
+                        <i class="la la-check-circle-o" *ngIf="!!approveInfo.managerApr"></i>
+                    </div>
+                    <div class="font-weight-bold">
+                        {{approveInfo.managerName}}
+                    </div>
+                    <div class="font-weight-bold">
+                        {{!!approveInfo.managerAprDate ? (approveInfo.managerAprDate | date: 'dd/MM/yyyy HH:mm') : '/.../'}}
+                    </div>
+                </div>
+            </li>
+            <li>
+                <div class="progress-content text-center">
+                    <div class="font-weight-bolder">Accountant</div>
+                    <div class="icon-check">
+                        <i class="la la-check-circle-o" *ngIf="!!approveInfo.accountantApr"></i>
+                    </div>
+                    <div class="font-weight-bold">
+                        {{approveInfo.accountantName}}
+                    </div>
+                    <div class="font-weight-bold">
+                        {{!!approveInfo.accountantAprDate ? (approveInfo.accountantAprDate | date: 'dd/MM/yyyy HH:mm') : '/.../'}}
+                    </div>
+                </div>
+            </li>
+            <li>
+                <div class="progress-content text-center">
+                    <div class="font-weight-bolder">BU HEAD</div>
+                    <div class="icon-check">
+                        <i class="la la-check-circle-o" *ngIf="approveInfo.buheadAprDate"></i>
+                    </div>
+                    <div class="font-weight-bold">
+                        {{approveInfo.buHeadName}}
+                    </div>
+                    <div class="font-weight-bold">
+                        {{!!approveInfo.buheadAprDate ? (approveInfo.buheadAprDate | date: 'dd/MM/yyyy HH:mm') : '/.../'}}
+                    </div>
+                </div>
+            </li>
+        </ul>
+    </div>
+</div>

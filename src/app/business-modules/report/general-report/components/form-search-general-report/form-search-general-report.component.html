@@ -1,0 +1,241 @@
+<div class="m-portlet">
+    <div class="m-portlet__body">
+        <!--begin::Form-->
+        <form class="m-form m-form--state" [formGroup]="formSearch" (ngSubmit)="searchReport()">
+            <div class="row">
+                <div class="col-lg-4">
+                    <div class="form-group">
+                        <label class="form-control-label" for="">
+                            Date
+                        </label>
+                        <input type="text" class="form-control m-input m-input--square" ngxDaterangepickerMd
+                            [autoApply]="true" [locale]="{applyLabel: 'apply', format: 'DD/MM/YYYY'}" [ranges]="ranges"
+                            [alwaysShowCalendars]="true" name="daterange" formControlName="serviceDate"
+                            placeholder="From date - to date" readonly />
+                    </div>
+                </div>
+                <div class="col-lg-4">
+                    <div class="form-group">
+                        <label class="form-control-label">
+                            Date Type
+                        </label>
+                        <ng-select formControlName="dateType" [allowClear]="false" [items]="dateTypeList"
+                            [active]="dateTypeActive">
+                        </ng-select>
+                    </div>
+                </div>
+                <div class="col-lg-4">
+                    <div class="form-group">
+                        <label class="form-control-label">
+                            Customer
+                        </label>
+                        <app-combo-grid-virtual-scroll [currentActiveItemId]="{ field: 'id', value: customer.value}"
+                            (itemSelected)="onSelectDataFormInfo($event, 'customer')"
+                            [selectedDisplayFields]="['shortName']" [dataSources]="customers | async"
+                            [displayFields]="displayFieldsCustomer" [height]="150"
+                            (remove)="resetFormControl(customer)">
+                        </app-combo-grid-virtual-scroll>
+                    </div>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-lg-4">
+                    <div class="form-group">
+                        <label class="form-control-label" for="">
+                            Service
+                        </label>
+                        <ng-select [multiple]='true' formControlName="service"
+                            (removed)="onRemoveDataFormInfo($event, 'service')" [items]="serviceList"
+                            [active]="serviceActive" (selected)="onSelectDataFormInfo($event, 'service')">
+                        </ng-select>
+                    </div>
+                </div>
+                <div class="col-lg-4">
+                    <div class="form-group">
+                        <label class="form-control-label">
+                            Currency
+                        </label>
+                        <ng-select formControlName="currency" [allowClear]="false" [items]="currencyList"
+                            [active]="currencyActive" (selected)="onSelectDataFormInfo($event, 'currency')">
+                        </ng-select>
+                    </div>
+                </div>
+                <div class="col-lg-4">
+                    <div class="form-group">
+                        <label class="form-control-label">
+                            Ref No
+                        </label>
+                        <div class="row">
+                            <div class="col-lg-7">
+                                <input type="text" id="searchText" class="form-control m-input m-input--square"
+                                    formControlName="refNo" autocomplete="nope">
+                            </div>
+                            <div class="col-lg-5">
+                                <ng-select formControlName="refNoType" [allowClear]="false" [items]="refNoTypeList"
+                                    [active]="refNoTypeActive">
+                                </ng-select>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <!--begin::Advance-search-->
+
+            <div class="collapse" id="advance-filter-general-report">
+                <div class="div-inside bg-secondary">
+                    <div class="row">
+                        <div class="col-lg-4">
+                            <div class="form-group" *ngIf="!!menuPermission">
+                                <label class="form-control-label" for="">
+                                    Office
+                                </label>
+                                <ng-select [multiple]='true' formControlName="office"
+                                    (removed)="onRemoveDataFormInfo($event, 'office')" [items]="officeList"
+                                    [active]="officeActive" (selected)="onSelectDataFormInfo($event, 'office')"
+                                    [disabled]="menuPermission.list !== 'Office' && menuPermission.list !== 'Company'">
+                                </ng-select>
+                            </div>
+                        </div>
+                        <div class="col-lg-4">
+                            <div class="form-group" *ngIf="!!menuPermission">
+                                <label class="form-control-label" for="">
+                                    Department
+                                </label>
+                                <ng-select [multiple]='true' formControlName="department"
+                                    (removed)="onRemoveDataFormInfo($event, 'department')" [items]="departmentList"
+                                    [active]="departmentActive" (selected)="onSelectDataFormInfo($event, 'department')"
+                                    [disabled]="menuPermission.list !== 'Office' && menuPermission.list !== 'Company'">
+                                </ng-select>
+                            </div>
+                        </div>
+                        <div class="col-lg-4">
+                            <div class="form-group" *ngIf="!!menuPermission">
+                                <label class="form-control-label" for="">
+                                    Group
+                                </label>
+                                <ng-select [multiple]='true' formControlName="group"
+                                    (removed)="onRemoveDataFormInfo($event, 'group')" [items]="groupList"
+                                    [active]="groupActive" (selected)="onSelectDataFormInfo($event, 'group')"
+                                    [disabled]="menuPermission.list === 'Owner' || menuPermission.list === 'Group'">
+                                </ng-select>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-lg-4">
+                            <div class="form-group" *ngIf="!!menuPermission">
+                                <label class="form-control-label" for="">
+                                    Staff Name
+                                </label>
+                                <ng-select [multiple]='true' formControlName="staff"
+                                    (removed)="onRemoveDataFormInfo($event, 'staff')" [items]="staffList"
+                                    [active]="staffActive" (selected)="onSelectDataFormInfo($event, 'staff')"
+                                    [disabled]="menuPermission.list === 'Owner'">
+                                </ng-select>
+                            </div>
+                        </div>
+                        <div class="col-lg-4">
+                            <div class="form-group">
+                                <label class="form-control-label" for="">
+                                    Type
+                                </label>
+                                <ng-select formControlName="staffType" [allowClear]="false" [items]="staffTypeList"
+                                    [active]="staffTypeActive">
+                                </ng-select>
+                            </div>
+                        </div>
+                        <div class="col-lg-4">
+                            <div class="form-group">
+                                <label class="form-control-label" for="">
+                                    Carrier
+                                </label>
+                                <app-combo-grid-virtual-scroll
+                                    [currentActiveItemId]="{ field: 'id', value: carrier.value}"
+                                    (itemSelected)="onSelectDataFormInfo($event, 'carrier')"
+                                    [selectedDisplayFields]="['shortName']" [dataSources]="carriers | async"
+                                    [displayFields]="displayFieldsCustomer" [height]="150"
+                                    (remove)="resetFormControl(carrier)">
+                                </app-combo-grid-virtual-scroll>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-lg-4">
+                            <div class="form-group">
+                                <label class="form-control-label" for="">
+                                    Agent
+                                </label>
+                                <app-combo-grid-virtual-scroll
+                                    [currentActiveItemId]="{ field: 'id', value: agent.value}"
+                                    (itemSelected)="onSelectDataFormInfo($event, 'agent')"
+                                    [selectedDisplayFields]="['shortName']" [dataSources]="agents | async"
+                                    [displayFields]="displayFieldsCustomer" [height]="150"
+                                    (remove)="resetFormControl(agent)">
+                                </app-combo-grid-virtual-scroll>
+                            </div>
+                        </div>
+                        <div class="col-lg-4">
+                            <div class="form-group">
+                                <label class="form-control-label" for="">
+                                    P.O.L/A.O.L
+                                </label>
+                                <app-combo-grid-virtual-scroll (itemSelected)="onSelectDataFormInfo($event, 'pol')"
+                                    [currentActiveItemId]="{ field: 'id', value: pol.value}"
+                                    [selectedDisplayFields]="['nameEn']" [dataSources]="ports | async"
+                                    [displayFields]="displayFieldPort" [height]="150" (remove)="resetFormControl(pol)">
+                                </app-combo-grid-virtual-scroll>
+                            </div>
+                        </div>
+                        <div class="col-lg-4">
+                            <div class="form-group">
+                                <label class="form-control-label" for="">
+                                    P.O.D/A.O.D
+                                </label>
+                                <app-combo-grid-virtual-scroll (itemSelected)="onSelectDataFormInfo($event, 'pod')"
+                                    [currentActiveItemId]="{ field: 'id', value: pod.value}"
+                                    [selectedDisplayFields]="['nameEn']" [dataSources]="ports | async"
+                                    [displayFields]="displayFieldPort" [height]="150" (remove)="resetFormControl(pod)">
+                                </app-combo-grid-virtual-scroll>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <!--end::Advance-search-->
+            <div class="form-actions">
+                <div class="row">
+                    <div class="col-lg-6">
+                        <a class="btn btn-link collapsed collapse-toggle" data-toggle="collapse"
+                            href="#advance-filter-general-report" role="button" aria-expanded="false"
+                            aria-controls="advance-filter-general-report">
+                            <span>
+                                <i class="la la-angle-up"></i>
+                                <span>Advance Filter</span>
+                            </span>
+                        </a>
+                    </div>
+                    <div class="col-lg-6 m--align-right">
+                        <button type="submit" class="btn btn-brand m-btn--square m-btn--icon m-btn--uppercase">
+                            <span>
+                                <i class="la la-search"></i>
+                                <span>
+                                    Apply
+                                </span>
+                            </span>
+                        </button>
+                        <button type="button" class="btn btn-default m-btn--square m-btn--icon m-btn--uppercase"
+                            (click)="resetSearch()">
+                            <span>
+                                <i class="la la-refresh"></i>
+                                <span>
+                                    Reset Filter
+                                </span>
+                            </span>
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </form>
+        <!--end::Form-->
+    </div>
+</div>

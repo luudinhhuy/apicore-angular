@@ -1,0 +1,135 @@
+<div class="modal existing-charge-popup m-animate-fade-in" role="dialog" bsModal #popup="bs-modal" aria-hidden="true">
+    <div class="modal-dialog c-modal-fullscreen" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">Get Charge</h5>
+                <button type="button" (click)="closePopup()" class="close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <div class="row">
+                    <div class="col-3">
+                        <div class="form-group">
+                            <label class="font-weight-bold">Partner</label>
+                            <app-combo-grid-virtual-scroll [currentActiveItemId]="selectedPartner"
+                                (itemSelected)="onSelectDataFormInfo($event, 'partner')"
+                                [selectedDisplayFields]="configPartner.selectedDisplayFields"
+                                [dataSources]="configPartner.dataSource" [displayFields]="configPartner.displayFields"
+                                [height]="200" [loading]="isLoadingPartnerGrid"
+                                (remove)="onRemoveDataFormInfo('partner')">
+                            </app-combo-grid-virtual-scroll>
+                        </div>
+                    </div>
+                    <div class="col-3">
+                        <div class="form-group">
+                            <label class="font-weight-bold">Service</label>
+                            <app-multiple-select [source]="services" [active]="selectedServices"
+                                (onChange)="onSelectDataFormInfo($event,'service')" [placeHolder]="'Select Service'">
+                            </app-multiple-select>
+                        </div>
+                    </div>
+                    <div class="col-4">
+                        <div class="form-group">
+                            <label class="font-weight-bold">Shipment</label>
+                            <app-combo-grid-virtual-scroll [currentActiveItemId]="selectedShipment"
+                                (itemSelected)="onSelectDataFormInfo($event, 'shipment')"
+                                [dataSources]="configShipment.dataSource" [displayFields]="configShipment.displayFields"
+                                [selectedDisplayFields]="configShipment.selectedDisplayFields"
+                                [loading]="isLoadingShipmentGrid" (remove)="onRemoveDataFormInfo('shipment')"
+                                [disabled]="shipmentInput">
+                            </app-combo-grid-virtual-scroll>
+                        </div>
+                    </div>
+                    <div class="col-2">
+                        <div class="form-group">
+                            <label class="font-weight-bold">&nbsp;</label>
+                            <div><a class="pointer" style="text-decoration: underline;"
+                                    (click)="openInputShipment()">Shipment List</a>&nbsp;&nbsp;<span
+                                    class="text-warning">{{numberOfShipment}} item</span></div>
+                        </div>
+                    </div>
+                    <div class="col-12 form-actions">
+                        <div class="m--align-right">
+                            <app-default-button [buttonSetting]="searchlButtonSetting" (onClick)="searchCharge()"
+                                [disabled]="!this.selectedPartnerData || (!selectedShipmentData && !shipmentInput)">
+                            </app-default-button>
+                            <app-default-button [buttonSetting]="resetButtonSetting" (onClick)="reset()"
+                                class="m--margin-left-10">
+                            </app-default-button>
+                        </div>
+                    </div>
+                </div>
+                <div class="row m--margin-top-20 m--marginless">
+                    <div class="table-wrapper m--margin-top-20">
+                        <table class="table table-brand dataTable table-striped">
+                            <thead app-table-header [headers]="headers" (onClick)="sortSurcharge($event)">
+                                <th class="first">
+                                    <label class="m-checkbox">
+                                        <input type="checkbox" [(ngModel)]="isCheckAll"
+                                            (change)="checkUncheckAllCharge()">
+                                        <span></span>
+                                    </label>
+                                </th>
+                            </thead>
+                            <tbody class="tbody-group">
+                                <ng-container *ngFor="let charge of charges; let i = index; trackBy:trackByFn">
+                                    <tr class="">
+                                        <td class="table-actions-col">
+                                            <div class="table-actions">
+                                                <label class="m-checkbox" *ngIf="!charge.settlementCode">
+                                                    <input type="checkbox" (change)="onChangeCheckBoxCharge()"
+                                                        value="{{charge}}" [(ngModel)]="charge.isSelected">
+                                                    <span></span>
+                                                </label>
+                                            </div>
+                                        </td>
+                                        <td>{{charge.chargeName}}</td>
+                                        <td>{{charge.quantity}}</td>
+                                        <td>{{charge.unitName}}</td>
+                                        <td>{{charge.unitPrice | number:'1.3-3'}}</td>
+                                        <td>{{charge.currencyId}}</td>
+                                        <td>{{charge.vatrate}}</td>
+                                        <td>{{charge.total | number:'1.3-3'}}</td>
+                                        <td>{{charge.settlementCode}}</td>
+                                    </tr>
+                                </ng-container>
+                                <tr *ngIf="!isLoading && !charges.length" app-table-none-record
+                                    [colspan]="headers.length + 1"></tr>
+                                <tr *ngIf="isLoading" app-table-row-loading></tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer m--align-center">
+                <div class="row">
+                    <div class="col-12">
+                        <div class="m--align-center m--margin-top-20">
+                            <button
+                                class="btn btn-primary m-btn--square m-btn--icon m-btn--uppercase m--margin-right-10"
+                                title="Save" (click)="submit()">
+                                <span>
+                                    <i class="la la-save"></i>
+                                    <span>
+                                        Add Charge
+                                    </span>
+                                </span>
+                            </button>
+                            <button class="btn btn-default m-btn--square m-btn--icon m-btn--uppercase" title="Cancel"
+                                (click)="closePopup()">
+                                <span>
+                                    <i class="la la-ban"></i>
+                                    <span>
+                                        Cancel
+                                    </span>
+                                </span>
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<input-shipment-popup (onInputShipment)="onShipmentList($event)"></input-shipment-popup>

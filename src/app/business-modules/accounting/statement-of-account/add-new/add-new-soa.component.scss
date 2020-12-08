@@ -1,0 +1,137 @@
+:host /deep/ {
+
+    //ng2-select
+    .ui-select-container {
+        .ui-select-choices .ui-select-choices-row .dropdown-item {
+            color: #6c6c6c;
+            font-family: inherit;
+        }
+
+        .ui-select-choices .ui-select-choices-row.active>a {
+            color: #fff;
+            background-color: #3966b6;
+        }
+
+        .ui-select-match {
+            .ui-select-toggle {
+                padding-right: 30px;
+            }
+        }
+    }
+
+    ng-select .ui-select-multiple,
+    .ui-select-multiple {
+        padding: 0.65rem 1rem;
+        border-radius: 0;
+
+        input.form-control.ui-select-search {
+            height: auto;
+            margin: 0;
+        }
+
+        .ui-select-match {
+            .ui-select-match-item {
+                padding: 3px 5px;
+                border-radius: 2px;
+                -webkit-appearance: none;
+                background-color: #3966b6;
+                border-color: #3966b6;
+                color: #fff;
+                font-size: 13px;
+
+                .close {
+                    color: #fff;
+                    font-size: 1.2rem;
+                    font-weight: 400;
+                    line-height: 1;
+                    text-shadow: none;
+
+                    &:hover {
+                        opacity: 1;
+                    }
+                }
+            }
+        }
+    }
+
+    .summary-wp {
+        // min-height: 200px;
+        background: transparent;
+        border: none;
+        box-shadow: none;
+
+        .card-header {
+            background: none;
+            border-bottom: 0;
+        }
+
+        .m-portlet__head {
+            border-bottom: 0;
+        }
+
+        .panel {
+            .m-portlet__head-text {
+                .hide {
+                    display: none;
+                }
+
+                .show {
+                    display: initial;
+                }
+            }
+
+            &.panel-open {
+                .m-portlet__head-text {
+                    .hide {
+                        display: initial;
+                    }
+
+                    .show {
+                        display: none;
+                    }
+                }
+            }
+        }
+    }
+
+    .form-charge {
+        .charge-list-selected {
+            border: 1px solid #eeeeee;
+            padding: 10px;
+            background: #fbfbfb;
+            border-bottom: none;
+
+            ul {
+                display: -webkit-box;
+                display: -ms-flexbox;
+                display: flex;
+                -ms-flex-wrap: wrap;
+                flex-wrap: wrap;
+
+                .charge-list-item {
+                    padding: 3px 5px;
+                    border-radius: 2px;
+                    -webkit-appearance: none;
+                    background-color: #3966b6;
+                    border-color: #3966b6;
+                    color: #fff;
+                    font-size: 13px;
+                    margin: 2px 5px;
+
+                    &:hover {
+                        cursor: pointer;
+                    }
+                }
+            }
+
+        }
+
+        .form-control {
+            border-top: none;
+
+            &:focus {
+                border-color: transparent;
+            }
+        }
+    }
+}

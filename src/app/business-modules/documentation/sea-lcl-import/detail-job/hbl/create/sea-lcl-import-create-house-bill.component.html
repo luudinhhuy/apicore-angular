@@ -1,0 +1,40 @@
+<div class="sea-lcl-create-hbl-page">
+    <app-sub-header>
+        <div class="c-button-actions">
+            <app-default-button *ngIf="allowAdd" (click)="showImportPopup()" [buttonSetting]="importButtonSetting">
+            </app-default-button>
+            <app-default-button *ngIf="allowAdd" (click)="showCreatePpoup()" [buttonSetting]="saveButtonSetting">
+            </app-default-button>
+            <app-default-button (click)="combackToHBLList()" [buttonSetting]="cancelButtonSetting"></app-default-button>
+        </div>
+
+    </app-sub-header>
+
+</div>
+
+<div class="m-content">
+    <div class="m-portlet__body">
+        <tabset class="custom-class-tab">
+            <tab heading="HBL Detail">
+                <form-create-house-bill-import> </form-create-house-bill-import>
+                <hbl-goods-summary-lcl> HBL Goods Summary </hbl-goods-summary-lcl>
+            </tab>
+            <tab heading="Arrival Notice">
+                <hbl-arrival-note-sea></hbl-arrival-note-sea>
+            </tab>
+            <tab heading="Delivery Order (D/O)" (selectTab)="onSelectTabDO($event)">
+                <hbl-delivery-order></hbl-delivery-order>
+            </tab>
+        </tabset>
+    </div>
+</div>
+
+<import-house-bill-detail (onImport)="onImport($event)" [jobId]="jobId" [typeTransaction]="9">
+</import-house-bill-detail>
+
+<info-popup [body]="'Opps, It looks like you missed something, Please recheck the highlighted field below.'"
+    [title]="'Cannot Create HBL'"></info-popup>
+
+<confirm-popup [body]="'You are about to create a new  HBL, are you sure all entered details are correct?'"
+    [labelCancel]="'No'" (onSubmit)="oncreate()" title="Save HBL">
+</confirm-popup>

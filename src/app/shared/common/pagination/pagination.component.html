@@ -1,0 +1,33 @@
+<div class="pagination-nav">
+    <div class="row">
+        <!-- <div class="col-sm-6">
+          <div class="select-box" style="max-width: 190px">
+              <select class="form-control" id="" aria-label="" [(ngModel)]="config.pageSize" (change)="selectPageSize()" name="pagesize">
+                  <ng-container *ngFor="let item of config.numberToShow; index as i; first as isFirst">
+                      <option [ngValue]="item"  [selected]="isFirst">{{item}} entries / page</option>
+                  </ng-container>
+              </select>
+          </div>
+      </div> -->
+
+        <div class="col-sm-6" *ngIf="config.totalItems > config.pageSize">
+            <nav aria-label="">
+                <ul class="pagination  justify-content-end">
+                    <li [ngClass]="{disabled:pager.currentPage === 1}" class="page-item"><a class="page-link"
+                            href="javascript:void(0)" (click)="setPage(1)">First</a></li>
+                    <li [ngClass]="{disabled:pager.currentPage === 1}" class="page-item"><a class="page-link"
+                            href="javascript:void(0)" (click)="setPage(pager.currentPage -1)">Back</a></li>
+                    <li *ngFor="let page of pager.pages" [ngClass]="{active:pager.currentPage === page}"
+                        class="page-item active"><a class="page-link" href="javascript:void(0)"
+                            (click)="setPage(page)">{{page}}</a></li>
+                    <li [ngClass]="{disabled:pager.currentPage === pager.totalPages}" class="page-item"><a
+                            class="page-link" href="javascript:void(0)"
+                            (click)="setPage(pager.currentPage + 1)">Next</a></li>
+                    <li [ngClass]="{disabled:pager.currentPage === pager.totalPages}" class="page-item"><a
+                            class="page-link" href="javascript:void(0)" (click)="setPage(pager.totalPages)">Last</a>
+                    </li>
+                </ul>
+            </nav>
+        </div>
+    </div>
+</div>

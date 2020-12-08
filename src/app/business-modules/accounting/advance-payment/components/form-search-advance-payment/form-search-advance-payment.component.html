@@ -1,0 +1,132 @@
+<div class="m-portlet">
+    <div class="m-form">
+        <div class="m-portlet__body">
+            <form class="row" action="" [formGroup]="formSearch">
+                <div class="col-4">
+                    <div class="form-group">
+                        <label>Reference No</label>
+                        <textarea name="" id="" cols="30" rows="10" class="form-control" formControlName="referenceNo"
+                            placeholder="Reference No"
+                            onkeypress="return event.charCode === 13 || event.charCode == 32 || event.charCode == 95 || (event.charCode > 96 && event.charCode < 123) || (event.charCode > 64 && event.charCode < 91) || (event.charCode > 44 && event.charCode < 58)">
+                        </textarea>
+                    </div>
+                </div>
+                <div class="col-4">
+                    <div class="row">
+                        <div class="col-12">
+                            <div class="form-group">
+                                <label for="">Requester</label>
+                                <input type="text" formControlName="requester" class="form-control"
+                                    placeholder="Requester">
+                            </div>
+                        </div>
+                        <div class="col-12">
+                            <div class="form-group">
+                                <label for="">Status Approval</label>
+                                <select class="form-control" formControlName="statusApproval">
+                                    <option [ngValue]="null">All</option>
+                                    <option *ngFor="let status of statusApprovals; let i = index" [ngValue]="status">
+                                        {{status.title}}</option>
+                                </select>
+                            </div>
+                        </div>
+                        <div class="col-12">
+                            <div class="form-group">
+                                <label for="">Status Payment</label>
+                                <select class="form-control" formControlName="statusPayment">
+                                    <option [ngValue]="null">All</option>
+                                    <option *ngFor="let status of statusPayments; let i = index" [ngValue]="status">
+                                        {{status.title}}</option>
+                                </select>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-4">
+                    <div class="row">
+                        <div class="col-12">
+                            <div class="form-group">
+                                <label for="">Request Date</label>
+                                <div class="m-input-icon m-input-icon--right down daterange-rtl">
+                                    <input type="text" class="form-control m-input m-input--square" ngxDaterangepickerMd
+                                        [locale]="{applyLabel: 'apply', format: 'DD/MM/YYYY'}" [maxDate]="maxDate"
+                                        name="daterange" readonly formControlName="requestDate" [ranges]="ranges"
+                                        [alwaysShowCalendars]="true" />
+                                    <span class="m-input-icon__icon m-input-icon__icon--right">
+                                        <span>
+                                            <i class="la la-calendar"></i>
+                                        </span>
+                                    </span>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-12">
+                            <div class="form-group">
+                                <label for="">Modified Date</label>
+                                <div class="m-input-icon m-input-icon--right down daterange-rtl">
+                                    <input type="text" class="form-control m-input m-input--square" ngxDaterangepickerMd
+                                        [locale]="{applyLabel: 'apply', format: 'DD/MM/YYYY'}" [maxDate]="maxDate"
+                                        name="daterange" readonly formControlName="modifiedDate" [ranges]="ranges"
+                                        [alwaysShowCalendars]="true" />
+                                    <span class="m-input-icon__icon m-input-icon__icon--right">
+                                        <span>
+                                            <i class="la la-calendar"></i>
+                                        </span>
+                                    </span>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-12">
+                            <div class="form-group">
+                                <label for="">Payment Method</label>
+                                <select class="form-control" formControlName="paymentMethod">
+                                    <option [ngValue]="null">All</option>
+                                    <option *ngFor="let method of paymentMethods" [ngValue]="method">{{method.title}}
+                                    </option>
+                                </select>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-4"></div>
+                <div class="col-4">
+                    <div class="form-group">
+                        <label for="">Currency</label>
+                        <select class="form-control" formControlName="currencyId">
+                            <option [ngValue]="null">All</option>
+                            <option *ngFor="let currency of currencies" [ngValue]="currency">{{currency.id}}
+                            </option>
+                        </select>
+                    </div>
+                </div>
+            </form>
+            <div class="form-actions">
+                <div class="row">
+                    <div class="col-lg-6"></div>
+                    <div class="col-lg-6 m--align-right">
+                        <button type="button" class="btn btn-brand m-btn--square m-btn--icon m-btn--uppercase"
+                            (click)="search()">
+                            <span>
+                                <i class="la la-search"></i>
+                                <span>
+                                    Search
+                                </span>
+                            </span>
+                        </button>
+                        <button type="button" class="btn btn-default m-btn--square m-btn--icon m-btn--uppercase"
+                            (click)="reset()">
+                            <span>
+                                <i class="la la-refresh"></i>
+                                <span>
+                                    Reset
+                                </span>
+                            </span>
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+
+</div>

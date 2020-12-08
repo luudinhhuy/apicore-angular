@@ -1,0 +1,26 @@
+<div class="sea-fcl-create-hbl-page">
+    <app-sub-header>
+        <div class="c-button-actions">
+            <app-default-button (click)="showImportPopup()" *ngIf="allowAdd" [buttonSetting]="importButtonSetting">
+            </app-default-button>
+            <app-default-button (click)="showCreatepoup()" *ngIf="allowAdd" [buttonSetting]="saveButtonSetting">
+            </app-default-button>
+            <app-default-button [buttonSetting]="cancelButtonSetting" (onClick)="gotoList()"></app-default-button>
+        </div>
+    </app-sub-header>
+</div>
+
+<div class="m-content">
+    <form-create-house-bill-export></form-create-house-bill-export>
+
+    <hbl-goods-summary-fcl type="export">HBL Goods Summary</hbl-goods-summary-fcl>
+</div>
+<import-house-bill-detail (onImport)="onImport($event)" [jobId]="jobId" [typeTransaction]="6">
+</import-house-bill-detail>
+
+<info-popup [body]="'Opps, It looks like you missed something, Please recheck the highlighted field below.'"
+    [title]="'Cannot Update HBL'"></info-popup>
+
+<confirm-popup [body]="'Are you sure you want to create HBL?'" [labelCancel]="'No'" (onSubmit)="onSaveHBL()"
+    [labelConfirm]="'Yes'" [title]="'Save HBL'">
+</confirm-popup>

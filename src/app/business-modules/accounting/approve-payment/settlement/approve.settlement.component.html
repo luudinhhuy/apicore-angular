@@ -1,0 +1,135 @@
+<app-sub-header></app-sub-header>
+<div class="m-content">
+    <div class="m-portlet">
+        <div class="m-form">
+            <div class="m-portlet__body">
+                <settle-payment-form-create (onChangeCurrency)="onChangeCurrency($event)"></settle-payment-form-create>
+                <div class="row" *ngIf="!!settlementPayment">
+                    <div class="col-6">
+                        <div class="m--align-left">
+                            Created: {{settlementPayment.settlement.datetimeCreated | date: 'dd/MM/yyyy HH:mm'}}
+                            &nbsp;
+                            By <span class="text-success">{{settlementPayment.settlement.userNameCreated}}</span>
+                        </div>
+                    </div>
+                    <div class="col-6">
+                        <div class="m--align-left">
+                            Modified: {{settlementPayment.settlement.datetimeModified | date: 'dd/MM/yyyy HH:mm'}}
+                            &nbsp;
+                            By <span class="text-success">{{settlementPayment.settlement.userNameCreated}}</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="m-portlet">
+        <div class="m-form">
+            <div class="m-portlet__body">
+                <settle-payment-list-charge></settle-payment-list-charge>
+            </div>
+        </div>
+    </div>
+    <div class="m-portlet">
+        <div class="m-form">
+            <div class="m-portlet__body">
+
+                <ng-container *ngIf="!!approveInfo">
+                    <process-approve [approveInfo]="approveInfo"></process-approve>
+                </ng-container>
+
+                <div class="row height-row-12">
+                    <div class="col-12">
+                        <div class="text-center w-50 m-auto m--margin-top-20" *ngIf="!!approveInfo">
+                            <div class="c-button-actions">
+                                <button
+                                    class="btn btn-primary m-btn--square m-btn--icon m-btn--uppercase m--margin-right-10"
+                                    title="Approve" (click)="showModalApprove()" *ngIf="!approveInfo.isApproved">
+                                    <span>
+                                        <i class="la la-save"></i>
+                                        <span>
+                                            Approve
+                                        </span>
+                                    </span>
+                                </button>
+                                <button
+                                    class="btn btn-danger m-btn--square m-btn--icon m-btn--uppercase m--margin-right-10"
+                                    title="Deny"
+                                    *ngIf="!approveInfo.isApproved || (approveInfo.isManager && (approveInfo.statusApproval === 'RequestApproval' || approveInfo.statusApproval === 'DepartmentManagerApproved'))"
+                                    (click)="showDenyPopup()">
+                                    <span>
+                                        <i class="la la-times"></i>
+                                        <span>
+                                            Deny
+                                        </span>
+                                    </span>
+                                </button>
+                                <div class="dropdown m-dropdown m-dropdown--inline no-arrow">
+                                    <app-default-button data-toggle="dropdown" aria-haspopup="true"
+                                        aria-expanded="false" [buttonSetting]="previewButtonSetting">
+                                    </app-default-button>
+                                    <div class="dropdown-menu" aria-labelledby="">
+                                        <a class="dropdown-item" href="javascript:void(0)"
+                                            (click)="previewSettlementPayment()">Preview single</a>
+                                        <a class="dropdown-item" href="javascript:void(0)"
+                                            (click)="exportSettlementPayment('VN')">Print multiple
+                                            (VN)</a>
+                                        <a class="dropdown-item" href="javascript:void(0)"
+                                            (click)="exportSettlementPayment('ENG')">Print multiple
+                                            (ENG)</a>
+                                    </div>
+                                </div>
+                                <app-default-button [buttonSetting]="cancelButtonSetting" (onClick)="back()">
+                                </app-default-button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<ng-template #modal_deny>
+    <div class="modal-header">
+        <h4 class="modal-title pull-left">Comment</h4>
+        <button type="button" class="close pull-right" aria-label="Close" (click)="modalRef.hide()">
+            <span aria-hidden="true">&times;</span>
+        </button>
+    </div>
+    <div class="modal-body">
+        <div class="form-group">
+            <textarea class="form-control" name="comment" id="" cols="30" rows="10" [(ngModel)]="comment"></textarea>
+        </div>
+    </div>
+    <div class="modal-footer m--align-center c-button-actions">
+        <button type="button" class="btn btn-brand m-btn--square m-btn--icon m-btn--uppercase"
+            (click)="onConfirmDenied()">
+            <span>
+                <i class="la la-save"></i>
+                <span>
+                    Continue
+                </span>
+            </span>
+        </button>
+        <button type="button" class="btn btn-cancel m-btn--square m-btn--icon m-btn--uppercase"
+            (click)="modalRef.hide()">
+            <span>
+                <i class="la la-ban"></i>
+                <span>
+                    Cancel
+                </span>
+            </span>
+        </button>
+    </div>
+</ng-template>
+
+<ng-container *ngIf="dataReport">
+    <app-report-preview [data]="dataReport"></app-report-preview>
+</ng-container>
+
+<confirm-popup #confirmDenyPopup (onSubmit)="openModalDeny(modal_deny)"
+    [body]="'Do you want to deny this settlement payment ?'" [labelConfirm]="'Yes'"></confirm-popup>
+
+<confirm-popup #confirmApprovePopup (onSubmit)="onConfirmApprove()"
+    [body]="'Do you want to approve this settlement payment?'" [labelConfirm]="'Yes'"></confirm-popup>

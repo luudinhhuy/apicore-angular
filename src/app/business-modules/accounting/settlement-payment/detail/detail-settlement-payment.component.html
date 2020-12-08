@@ -1,0 +1,71 @@
+<app-sub-header></app-sub-header>
+<div class="m-content">
+    <div class="m-portlet">
+        <div class="m-form">
+            <div class="m-portlet__body">
+                <settle-payment-form-create (onChangeCurrency)="onChangeCurrency($event)"></settle-payment-form-create>
+                <div class="row" *ngIf="!!settlementPayment">
+                    <div class="col-6">
+                        <div class="m--align-left">
+                            Created: {{settlementPayment.settlement.datetimeCreated | date: 'dd/MM/yyyy HH:mm'}}
+                            &nbsp;
+                            By <span class="text-success">{{settlementPayment.settlement.userNameCreated}}</span>
+                        </div>
+                    </div>
+                    <div class="col-6">
+                        <div class="m--align-left">
+                            Modified: {{settlementPayment.settlement.datetimeModified | date: 'dd/MM/yyyy HH:mm'}}
+                            &nbsp;
+                            By <span class="text-success">{{settlementPayment.settlement.userNameModified}}</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="m-portlet">
+        <div class="m-form">
+            <div class="m-portlet__body">
+
+                <settle-payment-list-charge (onChangeType)="updateSettlement()"></settle-payment-list-charge>
+
+                <div class="row height-row-12">
+                    <div class="col-12">
+                        <div class="m--align-center m--margin-top-20">
+                            <div class="c-button-actions">
+                                <ng-container
+                                    *ngIf="!!settlementPayment && (settlementPayment.settlement.statusApproval == 'Denied' || settlementPayment.settlement.statusApproval === 'New')">
+                                    <app-permission-button type="save" title="Save" (onClick)="updateSettlement()">
+                                    </app-permission-button>
+                                    <app-permission-button type="save-and-send" title="Save & Send Request"
+                                        (onClick)="saveAndSendRequest()"></app-permission-button>
+                                </ng-container>
+                                <div class="dropdown m-dropdown m-dropdown--inline no-arrow">
+                                    <app-default-button data-toggle="dropdown" aria-haspopup="true"
+                                        aria-expanded="false" [buttonSetting]="previewButtonSetting">
+                                    </app-default-button>
+                                    <div class="dropdown-menu" aria-labelledby="">
+                                        <a class="dropdown-item" href="javascript:void(0)"
+                                            (click)="previewSettlementPayment()">Preview single</a>
+                                        <a class="dropdown-item" href="javascript:void(0)"
+                                            (click)="exportSettlementPayment('VN')">Print multiple
+                                            (VN)</a>
+                                        <a class="dropdown-item" href="javascript:void(0)"
+                                            (click)="exportSettlementPayment('ENG')">Print multiple
+                                            (ENG)</a>
+                                    </div>
+                                </div>
+                                <app-default-button [buttonSetting]="cancelButtonSetting" (onClick)="back()">
+                                </app-default-button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<ng-container *ngIf="dataReport">
+    <app-report-preview [data]="dataReport"></app-report-preview>
+</ng-container>

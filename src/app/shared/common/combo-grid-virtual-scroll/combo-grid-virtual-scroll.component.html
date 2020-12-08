@@ -1,0 +1,79 @@
+<div class="dropdown e--combogrid" (clickOutside)="keyword = ''">
+    <input (click)="clickSearch()" class="form-control m-input m-input--square dropdown-toggle pos-rel"
+        [disabled]="Disabled" type="text" readonly data-toggle="dropdown"
+        [value]="displaySelectedStr == '' ? null : displaySelectedStr"
+        [tooltip]="isTooltip ? (displaySelectedStr == '' ? null : displaySelectedStr) : ''"
+        [placeholder]="loading ? '' : placeholder">
+    <ng-container>
+        <div class="e--combogrid_icon">
+            <span class="e--combogrid_icon__dropdown">
+                <i class="fa fa-angle-down" aria-hidden="true"></i>
+            </span>
+            <span class="e--combogrid_icon__clear" (click)="removeCurrenActiveItem()"
+                *ngIf="!!displaySelectedStr && !Disabled">
+                <i class="la la-times" aria-hidden="true"></i>
+            </span>
+        </div>
+    </ng-container>
+    <ng-container *ngIf="loading">
+        <div class="on-loading text-center">
+            <div class="m-loader m-loader--brand">
+            </div><span>Loading</span>
+        </div>
+    </ng-container>
+
+    <div class="dropdown-menu  dropdown-menu-right e--combogrid-content">
+        <div class="tabel-wrapper table-fixed">
+            <div class="table-head-fixed">
+                <div class="table-filter-block">
+                    <div class="search-field">
+                        <input #inputSearch class="form-control m-input m-input--square cbgr-input-search" type="text"
+                            placeholder="Search..." autofocus [(ngModel)]="keyword" (keyup)="handleKeyUp($event)">
+                        <i class="icon-search"></i>
+                    </div>
+                </div>
+                <div class="table-header">
+                    <table class="table table-hover" *ngIf="!!DisplayFields.length">
+                        <thead>
+                            <tr>
+                                <th *ngFor="let item of DisplayFields; trackBy: trackByFn">{{item.label}}</th>
+                            </tr>
+                        </thead>
+                    </table>
+                </div>
+            </div>
+            <div *ngIf="!loading && !!DataSources.length">
+                <cdk-virtual-scroll-viewport [ngStyle]="{'height.px': height}" [itemSize]="size">
+                    <table class="table table-hover">
+                        <tbody>
+                            <ng-container>
+                                <tr class="data-row pointer" #listItem
+                                    *cdkVirtualFor="let item of DataSources | filter :keyword: searchKeys; let i= index;trackBy: trackByFn"
+                                    data-id="{{(i+1)}}" (click)="emitSelected(item,i)"
+                                    [class.data-selected]="indexSelected !== -1 && i === indexSelected">
+                                    <td *ngFor="let display of DisplayFields; trackBy: trackByFn">
+                                        <span [innerHTML]="item[display.field] | highlight : keyword"></span>
+                                    </td>
+                                </tr>
+                            </ng-container>
+                        </tbody>
+                    </table>
+                </cdk-virtual-scroll-viewport>
+            </div>
+            <ng-container *ngIf="!loading && !DataSources.length">
+                <div>
+                    <div class="no-data">
+                        <i class="flaticon-coins"></i>
+                        <span class="no-data-text">No records found</span>
+                    </div>
+                </div>
+            </ng-container>
+            <ng-container *ngIf="loading">
+                <div class="on-loading text-center">
+                    <div class="m-loader m-loader--brand">
+                    </div><span>Loading</span>
+                </div>
+            </ng-container>
+        </div>
+    </div>
+</div>

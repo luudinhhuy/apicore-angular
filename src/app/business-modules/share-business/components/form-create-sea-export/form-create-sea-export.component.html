@@ -1,0 +1,215 @@
+<div class="m-portlet m-animate-fade-in">
+    <div class="m-portlet__body">
+        <div class="m-form m-form--state">
+            <div class="form" [formGroup]="formGroup">
+                <div class="row">
+                    <div class="col-md-4">
+                        <div class="form-group">
+                            <label>Job ID</label>
+                            <input type="text" class="form-control" formControlName="jobID">
+                        </div>
+                    </div>
+                    <div class="col-md-4">
+                        <div class="form-group"
+                            [ngClass]="{'m-form__group has-danger': (etd.dirty && !etd.value) || (isSubmitted && !etd.value) || (isSubmitted && !etd.value.startDate)}">
+                            <label required>ETD</label>
+                            <div class="m-input-icon m-input-icon--right down daterange-rtl">
+                                <input type="text" class="form-control m-input m-input--square" ngxDaterangepickerMd
+                                    [locale]="{format: 'DD/MM/YYYY'}" [autoApply]="true" [singleDatePicker]="true"
+                                    [alwaysShowCalendars]="true" name="daterange" placeholder="Select" readonly
+                                    formControlName="etd" />
+                                <span class="m-input-icon_clear" (click)="resetFormControl(etd)"
+                                    *ngIf="!!etd.value && !!etd.value.startDate">
+                                    <i class="la la-times"></i>
+                                </span>
+                                <span class="m-input-icon__icon m-input-icon__icon--right">
+                                    <span>
+                                        <i class="la la-calendar"></i>
+                                    </span>
+                                </span>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-4">
+                        <div class="form-group"
+                            [ngClass]="{'m-form__group has-danger':(isSubmitted && formGroup.errors | equalError:'validateEta_Etd') }">
+                            <label>ETA</label>
+                            <div class="m-input-icon m-input-icon--right down daterange-rtl">
+                                <input type="text" class="form-control m-input m-input--square" ngxDaterangepickerMd
+                                    [locale]="{format: 'DD/MM/YYYY'}" [autoApply]="true" [singleDatePicker]="true"
+                                    [alwaysShowCalendars]="true" name="daterange" placeholder="Select" readonly
+                                    formControlName="eta" />
+                                <span class="m-input-icon_clear" (click)="resetFormControl(eta)"
+                                    *ngIf="!!eta.value && !!eta.value.startDate">
+                                    <i class="la la-times"></i>
+                                </span>
+                                <span class="m-input-icon__icon m-input-icon__icon--right">
+                                    <span>
+                                        <i class="la la-calendar"></i>
+                                    </span>
+                                </span>
+                            </div>
+                            <div class="form-control-feedback"
+                                *ngIf="isSubmitted && formGroup.errors | equalError:'validateEta_Etd'">{{errorETA}}
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-4">
+                        <div class="form-group">
+                            <label>MBL No</label>
+                            <input type="text" class="form-control" formControlName="mawb">
+                        </div>
+                    </div>
+                    <div class="col-md-4">
+                        <div class="form-group"
+                            [ngClass]="{'m-form__group has-danger':   (mbltype.dirty && !mbltype.valid) || (isSubmitted && !mbltype.valid)}">
+                            <label required>MBL Type</label>
+                            <ng-select #selectMBL [items]="ladingTypes" placeholder="Please Select"
+                                formControlName="mbltype" (opened)="closeOtherSelects(selectMBL)" [allowClear]="true">
+                            </ng-select>
+                        </div>
+                    </div>
+                    <div class="col-md-4">
+                        <div class="form-group"
+                            [ngClass]="{'m-form__group has-danger':  isSubmitted && !coloader.value}">
+                            <label required>Shipping Line/Co-Loader</label>
+                            <app-combo-grid-virtual-scroll (itemSelected)="onSelectDataFormInfo($event, 'supplier')"
+                                [currentActiveItemId]="{ field: 'id', value: coloader.value}"
+                                [selectedDisplayFields]="['shortName']" [dataSources]="carries | async"
+                                [displayFields]="displayFieldsSupplier" (remove)="resetFormControl(coloader)"
+                                [loading]="isLoadingCarrier | async">
+                            </app-combo-grid-virtual-scroll>
+                        </div>
+                    </div>
+                    <div class="col-md-4">
+                        <div class="form-group">
+                            <label>Booking No</label>
+                            <input type="text" class="form-control" formControlName="bookingNo">
+                        </div>
+                    </div>
+                    <div class="col-md-4">
+                        <div class="form-group"
+                            [ngClass]="{'m-form__group has-danger': (typeOfService.dirty && !typeOfService.valid) || (isSubmitted && !typeOfService.valid)}">
+                            <label required>Services Type</label>
+                            <ng-select #select2 [items]="serviceTypes" placeholder="Please Select"
+                                formControlName="typeOfService" (opened)="closeOtherSelects(select2)"
+                                [allowClear]="true">
+                            </ng-select>
+                        </div>
+                    </div>
+                    <div class="col-md-4">
+                        <div class="form-group">
+                            <label>Agent</label>
+                            <app-combo-grid-virtual-scroll (itemSelected)="onSelectDataFormInfo($event, 'agent')"
+                                [currentActiveItemId]="{ field: 'id', value: agent.value}"
+                                [selectedDisplayFields]="['shortName']" [dataSources]="agents | async"
+                                [displayFields]="displayFieldsSupplier" (remove)="resetFormControl(agent)"
+                                [loading]="isLoadingAgent | async">
+                            </app-combo-grid-virtual-scroll>
+                        </div>
+                    </div>
+                    <div class="col-md-4">
+                        <div class="form-group" [ngClass]="{'m-form__group has-danger':  isSubmitted && !pol.value}">
+                            <label required>Port of Loading (POL)</label>
+                            <app-combo-grid-virtual-scroll (itemSelected)="onSelectDataFormInfo($event, 'pol')"
+                                [currentActiveItemId]="{ field: 'id', value: pol.value}"
+                                [selectedDisplayFields]="['nameEn']" [dataSources]="ports | async"
+                                [displayFields]="displayFieldPort" (remove)="resetFormControl(pol)"
+                                [loading]="isLoadingPort | async">
+                            </app-combo-grid-virtual-scroll>
+                        </div>
+                    </div>
+                    <div class="col-md-4">
+                        <div class="form-group"
+                            [ngClass]="{'m-form__group has-danger':  isSubmitted && formGroup.errors | equalError:'invalidPort'}">
+                            <label>Port of Destination (POD)</label>
+                            <app-combo-grid-virtual-scroll (itemSelected)="onSelectDataFormInfo($event, 'pod')"
+                                [currentActiveItemId]="{ field: 'id', value: pod.value}"
+                                [selectedDisplayFields]="['nameEn']" [dataSources]="ports | async"
+                                [displayFields]="displayFieldPort" (remove)="resetFormControl(pod)"
+                                [loading]="isLoadingPort | async">
+                            </app-combo-grid-virtual-scroll>
+                            <div class="form-control-feedback"
+                                *ngIf="isSubmitted && formGroup.errors | equalError:'invalidPort'">
+                                Port of Destination must be different from Port of Loading
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="col-md-4">
+                        <div class="form-group"
+                            [ngClass]="{'m-form__group has-danger':  (term.dirty && !term.valid) || (isSubmitted && !term.valid)}">
+                            <label required>Term</label>
+                            <ng-select #selectTerm [items]="termTypes" placeholder="Please Select"
+                                formControlName="term" (opened)="closeOtherSelects(selectTerm)" [allowClear]="true">
+                            </ng-select>
+                        </div>
+                    </div>
+                    <div class="col-md-4">
+                        <div class="form-group">
+                            <label>Vessel Name</label>
+                            <input type="text" class="form-control" formControlName="flightVesselName">
+                        </div>
+                    </div>
+                    <div class="col-md-4">
+                        <div class="form-group">
+                            <label>Voy No</label>
+                            <input type="text" class="form-control" formControlName="voyNo">
+                        </div>
+                    </div>
+                    <div class="col-md-4">
+                        <div class="form-group"
+                            [ngClass]="{'m-form__group has-danger':  (shipmentType.dirty && !shipmentType.valid) || (isSubmitted && !shipmentType.valid)}">
+                            <label required>Shipment Type</label>
+                            <ng-select #selectShipmentType [items]="shipmentTypes" placeholder="Please Select"
+                                formControlName="shipmentType" (opened)="closeOtherSelects(selectShipmentType)"
+                                [allowClear]="true">
+                            </ng-select>
+                        </div>
+                    </div>
+                    <div class="col-md-4">
+                        <div class="form-group">
+                            <label>Purhase Order(P/O) No</label>
+                            <input type="text" class="form-control" formControlName="pono">
+                        </div>
+                    </div>
+                    <div class="col-md-4">
+                        <div class="form-group">
+                            <label>ATD</label>
+                            <div class="m-input-icon m-input-icon--right down daterange-rtl">
+                                <input type="text" class="form-control m-input m-input--square" ngxDaterangepickerMd
+                                    [locale]="{format: 'DD/MM/YYYY'}" [autoApply]="true" [singleDatePicker]="true"
+                                    [alwaysShowCalendars]="true" name="daterange" placeholder="Select" readonly
+                                    formControlName="serviceDate" />
+                                <span class="m-input-icon_clear" (click)="resetFormControl(serviceDate)"
+                                    *ngIf="!!serviceDate.value && !!serviceDate.value.startDate">
+                                    <i class="la la-times"></i>
+                                </span>
+                                <span class="m-input-icon__icon m-input-icon__icon--right">
+                                    <span>
+                                        <i class="la la-calendar"></i>
+                                    </span>
+                                </span>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-4">
+                        <div class="form-group"
+                            [ngClass]="{'m-form__group has-danger':  isSubmitted && !personalIncharge.value}">
+                            <label required>Personal In Charge</label>
+                            <select formControlName="personalIncharge" disabled class="form-control">
+                                <option *ngFor="let item of (listUsers | async)" [value]="item.id">{{item.username}}
+                                </option>
+                            </select>
+                        </div>
+                    </div>
+                    <div class="col-md-12">
+                        <label>Note</label>
+                        <textarea cols="30" rows="6" class="form-control" formControlName="notes"></textarea>
+                    </div>
+                </div>
+            </div>
+            <ng-content></ng-content>
+        </div>
+    </div>
+</div>

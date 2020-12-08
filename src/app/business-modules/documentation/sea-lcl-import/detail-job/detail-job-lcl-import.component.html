@@ -1,0 +1,117 @@
+<div class="detail-job-lcl-import">
+    <app-sub-header>
+        <div class="c-button-actions">
+            <ng-container *ngIf="!!shipmentDetail && !shipmentDetail.isLocked">
+                <app-default-button [buttonSetting]="lockButtonSetting" (onClick)="lockShipment()"
+                    *ngIf="!!shipmentDetail && shipmentDetail.permission.allowLock">
+                </app-default-button>
+            </ng-container>
+            <span *ngIf="!!shipmentDetail && !!shipmentDetail.isLocked" class="m--margin-right-10 align-middle">
+                <i class="fa fa-lock text-danger fa-3x"></i>
+            </span>
+            <div class="dropdown m-dropdown m-dropdown--inline">
+                <button class="btn btn-default dropdown-toggle" type="button" data-toggle="dropdown"
+                    [disabled]="ACTION === 'COPY'">
+                    <i class="la la-print"></i>P/L Sheet<span class="caret"></span>
+                </button>
+                <div class="dropdown-menu">
+                    <a class="dropdown-item pointer" (click)="previewPLsheet('USD')">Preview with USD</a>
+                    <a class="dropdown-item pointer" (click)="previewPLsheet('VND')">Preview with VND</a>
+                </div>
+            </div>
+            <ng-container *ngIf="!!shipmentDetail && !shipmentDetail.isLocked">
+
+                <button (click)="showDuplicateConfirm()" type="button" [disabled]="ACTION === 'COPY'"
+                    class="btn btn-success m-btn--square m-btn--icon m-btn--uppercase"
+                    *ngIf="!!shipmentDetail && shipmentDetail.permission.allowUpdate">
+                    <span>
+                        <i class="la la-search-plus"></i>
+                        <span>
+                            Duplicate
+                        </span>
+                    </span>
+                </button>
+
+                <button type="button" class="btn btn-danger m-btn--square m-btn--icon m-btn--uppercase"
+                    (click)="prepareDeleteJob()" [disabled]="ACTION === 'COPY'"
+                    *ngIf="!!shipmentDetail && shipmentDetail.permission.allowDelete">
+                    <span>
+                        <i class="la la-trash"></i>
+                        <span>
+                            Delete
+                        </span>
+                    </span>
+                </button>
+
+                <app-default-button [buttonSetting]="saveButtonSetting" (onClick)="onSaveJob()"
+                    *ngIf="!!shipmentDetail && shipmentDetail.permission.allowUpdate"></app-default-button>
+            </ng-container>
+
+            <app-default-button [buttonSetting]="cancelButtonSetting" (onClick)="confirmCancelPopup.show()">
+            </app-default-button>
+
+        </div>
+    </app-sub-header>
+
+    <div class="m-content">
+        <div class="m-portlet__body">
+            <tabset class="custom-class-tab">
+                <tab heading="Shipment Detail" [active]="selectedTab === 'SHIPMENT'"
+                    (selectTab)="onSelectTab('shipment')">
+                    <form-create-sea-import>
+                        <ng-container *ngIf="!!shipmentDetail">
+                            <date-time-modified [timeCreated]="shipmentDetail.datetimeCreated"
+                                [userCreated]="shipmentDetail.userNameCreated"
+                                [timeModified]="shipmentDetail.datetimeModified"
+                                [userModified]="shipmentDetail.userNameModified">
+                            </date-time-modified>
+                        </ng-container>
+                    </form-create-sea-import>
+
+                    <shipment-good-summary-lcl> Shipment Goods Summary </shipment-good-summary-lcl>
+
+                    <grant-total-profit></grant-total-profit>
+
+
+                </tab>
+                <tab heading="House Bills List" (selectTab)="onSelectTab('hbl')" [disabled]="ACTION === 'COPY'">
+                </tab>
+                <tab heading="Debit Note & Credit Note" (selectTab)="onSelectTab('cdNote')"
+                    [disabled]="ACTION === 'COPY'" [active]="selectedTab === 'CDNOTE'">
+                    <ng-container *ngIf="selectedTab === 'CDNOTE'" loadModule="SeaLCLImport_cdNote">
+                    </ng-container>
+                </tab>
+                <tab heading="Assignment" (selectTab)="onSelectTab('assignment')" [disabled]="ACTION === 'COPY'"
+                    [active]="selectedTab === 'ASSIGNMENT'">
+                    <ng-container *ngIf="selectedTab === 'ASSIGNMENT'" loadModule="SeaLCLImport_assignment">
+                    </ng-container>
+                </tab>
+            </tabset>
+        </div>
+    </div>
+</div>
+
+
+
+<info-popup [body]="'Opps, It looks like you missed something, Please recheck the highlighted field below.'"
+    [title]="'Cannot Create Job'"></info-popup>
+
+<confirm-popup #deleteConfirmTemplate [body]="'You you sure you want to delete this Job'" [title]="'Alert'"
+    [labelConfirm]="'Yes'" (onSubmit)="onDeleteJob()"></confirm-popup>
+
+<confirm-popup #duplicateconfirmTemplate [body]="'Are you sure you want to duplicate this Job?'"
+    [title]="'Duplicate job detail'" [labelConfirm]="'Yes'" (onSubmit)="duplicateConfirm()"></confirm-popup>
+
+<confirm-popup #confirmLockShipment (onSubmit)="onLockShipment()" [body]="'Do you want to lock this shipment ?'"
+    [labelConfirm]="'Yes'"></confirm-popup>
+
+
+<confirm-popup #confirmCancelPopup body="All entered data will be discard. Are you sure you want to leave?"
+    (onSubmit)="gotoList()"></confirm-popup>
+
+<ng-container *ngIf="dataReport">
+    <app-report-preview [data]="dataReport"></app-report-preview>
+</ng-container>
+
+<info-popup [body]="'You are not allowed to delete this job'"></info-popup>
+<permission-403-popup></permission-403-popup>

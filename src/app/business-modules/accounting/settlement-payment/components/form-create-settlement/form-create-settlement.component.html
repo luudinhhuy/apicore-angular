@@ -1,0 +1,74 @@
+<div class="form-update-advpayment">
+    <form [formGroup]="form">
+        <div class="row">
+            <div class="col-4">
+                <div class="form-group">
+                    <label class="form-control-label">
+                        Settlement No:
+                    </label>
+                    <input type="text" class="form-control m-input m-input--square" placeholder="Settlement no"
+                        formControlName="settlementNo">
+                </div>
+            </div>
+            <div class="col-4">
+                <div class="form-group">
+                    <label class="form-control-label">
+                        Requester:
+                    </label>
+                    <select class="form-control" formControlName="requester">
+                        <option *ngFor="let user of (users | async)" [ngValue]="user.id">{{user.username}}</option>
+                    </select>
+                </div>
+            </div>
+            <div class="col-4">
+                <div class="form-group">
+                    <label class="form-control-label" required>
+                        Request Date:
+                    </label>
+                    <div class="m-input-icon m-input-icon--right down daterange-rtl">
+                        <input type="text" class="form-control m-input m-input--square" ngxDaterangepickerMd
+                            [locale]="{applyLabel: 'apply', format: 'DD/MM/YYYY'}" [singleDatePicker]="true"
+                            name="daterange" placeholder="Select request date" [autoApply]="true"
+                            formControlName="requestDate" [attr.disabled]="isDisabled" />
+                        <span class="m-input-icon__icon m-input-icon__icon--right">
+                            <span>
+                                <i class="la la-calendar"></i>
+                            </span>
+                        </span>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-4">
+                <div class="form-group">
+                    <label>Payment Method</label>
+                    <select formControlName="paymentMethod" class="form-control">
+                        <option *ngFor="let method of methods" [ngValue]="method">{{method.title}}</option>
+                    </select>
+                </div>
+            </div>
+            <div class="col-4">
+                <div class="form-group">
+                    <label>Settlement Amount</label>
+                    <input currencyMask type="text" formControlName="amount" class="form-control">
+                </div>
+            </div>
+            <div class="col-4">
+                <div class="form-group">
+                    <label>Currency</label>
+                    <select formControlName="currency" class="form-control">
+                        <option *ngFor="let currency of currencyList" [ngValue]="currency.id">{{currency.id}}</option>
+                    </select>
+                </div>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-12">
+                <div class="form-group">
+                    <label>Note</label>
+                    <input type="text" class="form-control" formControlName="note"></div>
+            </div>
+        </div>
+    </form>
+</div>

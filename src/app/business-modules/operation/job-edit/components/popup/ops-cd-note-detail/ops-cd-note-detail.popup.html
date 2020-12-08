@@ -1,0 +1,284 @@
+<div class="modal fade" bsModal #popup="bs-modal" role="dialog">
+    <div class="modal-dialog c-modal-fullscreen" role="document">
+        <div class="modal-content" *ngIf="!!CdNoteDetail">
+            <div class="modal-header">
+                <h5 class="modal-title">Detail
+                    <b><span class="text-warning">{{CdNoteDetail.cdNote.type === 'CREDIT' ? 'Credit Note': CdNoteDetail.cdNote.type === 'DEBIT' ? 'Debit Note' : 'Invoice'}}</span></b>
+                No: <b class="text-warning">{{CdNoteDetail.cdNote.code}}</b></h5>
+                <button type="button" class="close" (click)="closePopup()">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+                <div class="modal-actions c-button-actions">
+                    <button class="btn btn-sm btn-default m-btn--square m-btn--icon" (click)="preview()">
+                        <span>
+                            <i class="la la-file-text-o"></i>
+                            <span>
+                                Preview
+                            </span>
+                        </span>
+                    </button>
+                </div>
+            </div>
+            <div class="modal-body">
+                <div class="m-form m-form--state">
+                    <div class="div-inside bg-secondary m--margin-bottom-15">
+                        <div class="row">
+                            <div class="col-lg-4">
+                                <div class>
+                                    <span class="font-weight-bold"> Subject To : </span>
+                                    {{CdNoteDetail.partnerNameEn}}
+                                </div>
+                                <div class="d-flex">
+                                    <span class="font-weight-bold"> Address: </span>
+                                    {{CdNoteDetail.partnerShippingAddress}}
+                                </div>
+                                <div>
+                                    <span class="font-weight-bold"> Tel: </span>
+                                    {{CdNoteDetail.partnerTel}}
+                                </div>
+                                <div>
+                                    <span class="font-weight-bold"> Taxcode: </span>
+                                    {{CdNoteDetail.partnerTaxcode}}
+                                </div>
+                                <div class="m--margin-top-10">
+                                    <div class="m--margin-top-5">
+                                        <span class="font-weight-bold"> Port of Loading: </span>
+                                        {{ CdNoteDetail.pol }}, {{CdNoteDetail.polCountry}}
+                                    </div>
+                                    <div class="m--margin-top-5">
+                                        <span class="font-weight-bold"> Port of Destination: </span>
+                                        {{ CdNoteDetail.pod }}, {{CdNoteDetail.podCountry}}
+                                    </div>
+                                    <div class="m--margin-top-5">
+                                        <span class="font-weight-bold"> Package Quantity: </span>
+                                        {{ CdNoteDetail.sumPackages | number: '1.2-2' }}
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-lg-4">
+                                <div>
+                                    <span class="font-weight-bold"> Job ID: </span>
+                                    {{CdNoteDetail.jobNo}}
+                                </div>
+                                <div>
+                                    <span class="font-weight-bold"> Master Bill of Lading No: </span>
+                                    {{CdNoteDetail.mbLadingNo}}
+                                </div>
+                                <div>
+                                    <span class="font-weight-bold"> Service Mode: </span>
+                                    {{CdNoteDetail.serviceMode}}
+                                </div>
+                                <div>
+                                    <span class="font-weight-bold"> Service Date: </span>
+                                    {{CdNoteDetail.serviceDate | date: 'dd/MM/yyyy'}}
+                                </div>
+                                <div class="m--margin-top-10">
+                                    <div class="m--margin-top-5">
+                                        <span class="font-weight-bold"> G.W: </span>
+                                        {{ CdNoteDetail.gw | number: '1.2-2' }}
+                                    </div>
+                                    <div class="m--margin-top-5">
+                                        <span class="font-weight-bold">Container Quantity: </span>
+                                        {{ CdNoteDetail.sumContainers | number: '1.2-2' }}
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-lg-4">
+                                <div>
+                                    <span class="font-weight-bold"> House Bill of Lading No: </span>
+                                    {{CdNoteDetail.hbLadingNo}}
+                                </div>
+                                <div>
+                                    <span class="font-weight-bold">Product Service: </span>
+                                    {{CdNoteDetail.productService}}
+                                </div>
+                                <div>
+                                    <span class="font-weight-bold">Shipment Mode: </span>
+                                    {{CdNoteDetail.jobNo}}
+                                </div>
+                                <div>
+                                    <span class="font-weight-bold">Finish Date: </span>
+                                    {{CdNoteDetail.etd | date: 'dd/MM/yyyy'}}
+                                </div>
+                                <div class="m--margin-top-10">
+                                    <div class="m--margin-top-5">
+                                        <span class="font-weight-bold"> CBM: </span>
+                                        {{ CdNoteDetail.cbm | number: '1.2-2' }}
+                                    </div>
+                                    <div class="m--margin-top-5">
+                                        <span class="font-weight-bold">SOA: </span>
+                                        {{CdNoteDetail.soaNo}}
+                                    </div>
+                                    <div class="m--margin-top-5">
+                                        <span class="font-weight-bold">
+                                            Locked:
+                                        </span>
+                                        <span
+                                            [ngClass]="CdNoteDetail.isLoocked ? 'm--font-danger' : ''">{{CdNoteDetail.isLoocked ? 'Yes' : 'No'}}</span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="table-wrapper fit-height-div">
+                        <table class="table table-striped table-brand dataTable">
+                            <!-- <thead>
+                                <tr>
+                                    <th class="sorting"
+                                        [ngClass]="{ 'sorting_asc ': (isDesc && sortKey == 'hwbno'), 'sorting_desc': (!isDesc && sortKey == 'hwbno') }"
+                                        (click)="sort('hwbno')">
+                                        <span>HBL No</span>
+                                    </th>
+                                    <th class="sorting"
+                                        [ngClass]="{ 'sorting_asc ': (isDesc && sortKey == 'chargeCode'), 'sorting_desc': (!isDesc && sortKey == 'chargeCode') }"
+                                        (click)="sort('chargeCode')">
+                                        <span>Code</span>
+                                    </th>
+                                    <th class="sorting"
+                                        [ngClass]="{ 'sorting_asc ': (isDesc && sortKey == 'nameEn'), 'sorting_desc': (!isDesc && sortKey == 'nameEn') }"
+                                        (click)="sort('nameEn')">
+                                        <span>Charge name</span>
+                                    </th>
+                                    <th class="sorting"
+                                        [ngClass]="{ 'sorting_asc ': (isDesc && sortKey == 'quantity'), 'sorting_desc': (!isDesc && sortKey == 'quantity') }"
+                                        (click)="sort('quantity')">
+                                        <span>Quantity</span>
+                                    </th>
+                                    <th class="sorting"
+                                        [ngClass]="{ 'sorting_asc ': (isDesc && sortKey == 'unit'), 'sorting_desc': (!isDesc && sortKey == 'unit') }"
+                                        (click)="sort('unit')">
+                                        <span>Unit</span>
+                                    </th>
+                                    <th class="sorting"
+                                        [ngClass]="{ 'sorting_asc ': (isDesc && sortKey == 'unitPrice'), 'sorting_desc': (!isDesc && sortKey == 'unitPrice') }"
+                                        (click)="sort('unitPrice')">
+                                        <span>Unit price</span>
+                                    </th>
+                                    <th class="sorting"
+                                        [ngClass]="{ 'sorting_asc ': (isDesc && sortKey == 'currencyId'), 'sorting_desc': (!isDesc && sortKey == 'currencyId') }"
+                                        (click)="sort('currencyId')">
+                                        <span>Currency</span>
+                                    </th>
+                                    <th class="sorting"
+                                        [ngClass]="{ 'sorting_asc ': (isDesc && sortKey == 'vatrate'), 'sorting_desc': (!isDesc && sortKey == 'vatrate') }"
+                                        (click)="sort('vatrate')">
+                                        <span>VAT</span>
+                                    </th>
+                                    <th class="sorting"
+                                        [ngClass]="{ 'sorting_asc ': (isDesc && sortKey == 'total'), 'sorting_desc': (!isDesc && sortKey == 'total') }"
+                                        (click)="sort('total')">
+                                        <span>Credit value</span>
+                                    </th>
+                                    <th class="sorting"
+                                        [ngClass]="{ 'sorting_asc ': (isDesc && sortKey == 'total'), 'sorting_desc': (!isDesc && sortKey == 'total') }"
+                                        (click)="sort('total')">
+                                        <span>Debit value</span>
+                                    </th>
+                                    <th class="sorting"
+                                        [ngClass]="{ 'sorting_asc ': (isDesc && sortKey == 'notes'), 'sorting_desc': (!isDesc && sortKey == 'notes') }"
+                                        (click)="sort('notes')">
+                                        <span>Note</span>
+                                    </th>
+                                </tr>
+                            </thead> -->
+                            <thead app-table-header [headers]="headers" (onClick)="sortBy($event.sortField)"></thead>
+                            <tbody class="tbody-group">
+                                <tr class="" *ngFor="let item of CdNoteDetail.listSurcharges;let i = index;">
+                                    <td>
+                                        <span>{{item.hwbno}}</span>
+                                    </td>
+                                    <td>
+                                        <span>{{item.chargeCode}}</span>
+                                    </td>
+                                    <td>
+                                        <span>{{item.nameEn}}</span>
+                                    </td>
+                                    <td>
+                                        <span>{{item.quantity}}</span>
+                                    </td>
+                                    <td>
+                                        <span>{{item.unit}}</span>
+                                    </td>
+                                    <td>
+                                        <span>{{item.unitPrice}}</span>
+                                    </td>
+                                    <td>
+                                        <span>{{item.currencyId}}</span>
+                                    </td>
+                                    <td>
+                                        <span>{{item.vatrate}}</span>
+                                    </td>
+                                    <td>
+                                        <span>{{item.credit | number:'1.3-3'}}</span>
+                                    </td>
+                                    <td>
+                                        <span>{{item.debit | number:'1.3-3'}}</span>
+                                    </td>
+                                    <td>
+                                        <span>{{item.notes}}</span>
+                                    </td>
+                                </tr>
+
+                            </tbody>
+                        </table>
+                    </div>
+                    <div class="m--margin-top-10">
+                        <div class="m-alert m-alert--square alert alert-info m--align-right m--marginless">
+                            <div class="row">
+                                <div class="col">
+                                    <strong>Total Credit:</strong><span class="m--margin-left-5">{{totalCredit}}</span>
+                                </div>
+                                <div class="col-md-auto">
+                                    <strong>Total Dedit:</strong> <span class="m--margin-left-5">{{totalDebit}}</span>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="m-alert m-alert--square alert alert-brand m--align-right m--marginless">
+                            <strong>Balance Amount:</strong><span class="m--margin-left-5">{{balanceAmount}}</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer m--align-center">               
+                <button class="btn btn-danger m-btn--square m-btn--icon m-btn--uppercase"
+                (click)="checkDeleteCdNote(CdNoteDetail.cdNote.id)">
+                    <span>
+                        <i class="la la-trash"></i>
+                        <span>
+                            Delete note
+                        </span>
+                    </span>
+                </button>
+                <button class="btn btn-success m-btn--square m-btn--icon m-btn--uppercase"
+                [disabled]="CdNoteDetail.isLoocked" (click)="openPopupEdit()">
+                    <span>
+                        <i class="la la-edit"></i>
+                        <span>
+                            Edit detail
+                        </span>
+                    </span>
+                </button>
+                <button type="button" class="btn btn-cancel m-btn--square m-btn--icon m-btn--uppercase"
+                    (click)="closePopup()">
+                    <span>
+                        <i class="la la-ban"></i>
+                        <span>
+                            Return
+                        </span>
+                    </span>
+                </button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<ops-cd-note-add-popup (onUpdate)="onUpdateCdNote($event)"></ops-cd-note-add-popup>
+
+<confirm-popup (onSubmit)="onDeleteCdNote()" [body]="deleteMessage" [labelConfirm]="'Ok'"></confirm-popup>
+
+<info-popup [body]="'You can not delete this Credit/Debit Note. Please recheck!'"></info-popup>
+
+<ng-container *ngIf="dataReport">
+    <app-report-preview [data]="dataReport"></app-report-preview>
+</ng-container>
